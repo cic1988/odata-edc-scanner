@@ -1,0 +1,10 @@
+__pycache__/*
+backup/*
+bin/*
+include/*
+lib/*
+lib64/**
+test*/*
+pip-selfcheck.json
+pyvenv.cfg
+converter/__pycache__/*
