@@ -163,7 +163,7 @@ class ODataConverterV2(ODataConverter):
                     entitysetproperty = copy.deepcopy(self._links_head)
                     entitysetproperty['association'] = self._association_entitysetproperty
                     entitysetproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    entitysetproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + prop.name
+                    entitysetproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(entitysetproperty)
         

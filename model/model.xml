@@ -11,7 +11,7 @@
             <version>1</version>
         </requiredPackage>
     </requiredPackages>
-    <version>1</version>
+    <version>3</version>
     <classes>
         <class>
             <name>endpoint</name>
@@ -28,7 +28,7 @@
             <name>entityset</name>
             <label>entityset</label>
             <description></description>
-            <isFirstClass>false</isFirstClass>
+            <isFirstClass>true</isFirstClass>
             <boost>LOW</boost>
             <superClasses>
                 <superClass>core.DataSet</superClass>
@@ -50,7 +50,7 @@
     <attributes>
         <attribute>
             <name>dataType</name>
-            <label>dataType</label>
+            <label>DATATYPE</label>
             <dataType>core.String</dataType>
             <searchable>false</searchable>
             <facetable>false</facetable>
@@ -61,14 +61,32 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>true</data>
         </attribute>
         <attribute>
             <name>odataVersion</name>
-            <label>odataVersion</label>
+            <label>ODATAVERSION</label>
+            <dataType>core.String</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <analyzer>STRING</analyzer>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>true</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>true</data>
+        </attribute>
+        <attribute>
+            <name>DATATYPE</name>
+            <label>DATATYPE</label>
             <dataType>core.String</dataType>
             <searchable>false</searchable>
             <facetable>false</facetable>
@@ -82,7 +100,110 @@
             <deprecated>false</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
-            <data>true</data>
+            <data>false</data>
+        </attribute>
+        <attribute>
+            <name>ODATAVERSION</name>
+            <label>ODATAVERSION</label>
+            <dataType>core.String</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <analyzer>STRING</analyzer>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
+        </attribute>
+        <attribute>
+            <name>NULLABLE</name>
+            <label>NULLABLE</label>
+            <dataType>core.Boolean</dataType>
+            <searchable>false</searchable>
+            <facetable>true</facetable>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
+        </attribute>
+        <attribute>
+            <name>MAXLENGTH</name>
+            <label>MAXLENGTH</label>
+            <dataType>core.Integer</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
+        </attribute>
+        <attribute>
+            <name>FIXEDLENGTH</name>
+            <label>FIXEDLENGTH</label>
+            <dataType>core.Integer</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
+        </attribute>
+        <attribute>
+            <name>PRECISION</name>
+            <label>PRECISION</label>
+            <dataType>core.Integer</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
+        </attribute>
+        <attribute>
+            <name>SCALE</name>
+            <label>SCALE</label>
+            <dataType>core.Integer</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
         </attribute>
     </attributes>
     <associations>
