@@ -74,6 +74,7 @@ class ODataConverterV2(ODataConverter):
                 entityset['identity'] = endpoint['identity'] + '/' + es.name
                 entityset['core.name'] = es.name
                 entityset['core.description'] = es.name
+                entityset[self._model_entityset_entitytype] = es.entity_type.name
                 entityset[self._model_property_odataversion] = '2'
                 writer.writerow(entityset)
 
@@ -87,6 +88,7 @@ class ODataConverterV2(ODataConverter):
                     primarykey['identity'] =  entityset['identity'] + '/' + prop.name
                     primarykey['core.name'] = prop.name
                     primarykey['core.description'] = prop.name
+                    primarykey[self._model_property_primarykey] = True
                     primarykey[self._model_property_datatype] = prop.typ.name
                     primarykey[self._model_property_odataversion] = '2'
                     primarykey[self._model_property_nullable] = getattr(prop, 'nullable', None)
@@ -152,7 +154,7 @@ class ODataConverterV2(ODataConverter):
                     primarykeyproperty = copy.deepcopy(self._links_head)
                     primarykeyproperty['association'] = self._association_entitysetproperty
                     primarykeyproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    primarykeyproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + prop.name
+                    primarykeyproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(primarykeyproperty)
                     proprties.remove(prop)

@@ -14,11 +14,13 @@ class ODataConverter():
         """ 1) class """
         self._packagename = 'com.informatica.ldm.odata'
         self._model_endpoint = 'com.informatica.ldm.odata.endpoint'
-        self._model_entitytype = 'com.informatica.ldm.odata.entitytype'
+        #self._model_entitytype = 'com.informatica.ldm.odata.entitytype'
         self._model_entityset = 'com.informatica.ldm.odata.entityset'
         self._model_property = 'com.informatica.ldm.odata.property'
 
         """ 2) attribute """
+        self._model_entityset_entitytype = 'com.informatica.ldm.odata.ENTITYTYPE'
+        self._model_property_primarykey = 'com.informatica.ldm.odata.PrimaryKeyColumn'
         self._model_property_datatype = 'com.informatica.ldm.odata.DATATYPE'
         self._model_property_odataversion = 'com.informatica.ldm.odata.ODATAVERSION'
         self._model_property_nullable = 'com.informatica.ldm.odata.NULLABLE'
@@ -49,6 +51,8 @@ class ODataConverter():
             'identity': '',
             'core.name': '',
             'core.description': '',
+            self._model_entityset_entitytype: '',
+            self._model_property_primarykey: '',
             self._model_property_datatype: '',
             self._model_property_odataversion: '',
             self._model_property_nullable: '',

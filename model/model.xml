@@ -11,7 +11,7 @@
             <version>1</version>
         </requiredPackage>
     </requiredPackages>
-    <version>3</version>
+    <version>5</version>
     <classes>
         <class>
             <name>endpoint</name>
@@ -49,6 +49,24 @@
     </classes>
     <attributes>
         <attribute>
+            <name>ENTITYTYPE</name>
+            <label>ENTITYTYPE</label>
+            <dataType>core.String</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <analyzer>STRING</analyzer>
+            <boost>LOW</boost>
+            <description></description>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
+        </attribute>
+        <attribute>
             <name>dataType</name>
             <label>DATATYPE</label>
             <dataType>core.String</dataType>
@@ -83,6 +101,23 @@
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>true</data>
+        </attribute>
+        <attribute>
+            <name>PrimaryKeyColumn</name>
+            <label>Primary Key Column</label>
+            <dataType>core.Boolean</dataType>
+            <searchable>false</searchable>
+            <facetable>false</facetable>
+            <boost>LOW</boost>
+            <description/>
+            <multivalued>false</multivalued>
+            <suggestable>false</suggestable>
+            <sortable>false</sortable>
+            <visible>true</visible>
+            <deprecated>false</deprecated>
+            <derived>false</derived>
+            <fuzzy>false</fuzzy>
+            <data>false</data>
         </attribute>
         <attribute>
             <name>DATATYPE</name>
