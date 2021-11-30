@@ -80,3 +80,6 @@ class ODataConverter():
         }
         # do not overwrite the existing files yet
         # only do so when the conversion has succeeded.
+
+    def fetch_pdata(self, dir, force=False):
+        print()

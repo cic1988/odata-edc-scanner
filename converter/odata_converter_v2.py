@@ -172,3 +172,24 @@ class ODataConverterV2(ODataConverter):
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(dir) + '/links.csv')
 
+    def fetch_pdata(self, dir, force=False):
+        super().convert_links(dir, force)
+        
+        for es in self._client.schema.entity_sets:
+            print('EntitySet: ' + es.name)
+            entities = self._client.entity_sets._entity_sets[es.name].get_entities().execute()
+            
+            for entity in entities:
+                proprties = es.entity_type.proprties()
+
+                header = ''
+                for prop in proprties:
+                    header += prop.name + ','
+
+                print(header)
+
+                row = ''
+
+                for prop in proprties:
+                    row += str(getattr(entity, prop.name)) + ','
+                print(row)

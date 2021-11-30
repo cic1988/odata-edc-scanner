@@ -14,12 +14,16 @@ def execute(args):
     converter.convert_objects(args.dir, args.force)
     converter.convert_links(args.dir, args.force)
 
+    if args.resource:
+        converter.fetch_pdata(args.dir, args.force)
+
 def _parse_args(argv):
     parser = ArgumentParser()
     parser.add_argument('SERVICE_ROOT_URL', type=str)
     parser.add_argument('--dir', default=None, type=str, help='directory to save objects.csv and links.csv')
     parser.add_argument('--force', '-f', default=False, action='store_true', help='force overwritten the existing objects.csv and links.csv')
     parser.add_argument('--verbose', '-v', default=False, action='store_true')
+    parser.add_argument('--resource', default=None, type=str, help='(profiling enabled) resource name')
     parser.set_defaults(func=execute)
 
     args = parser.parse_args(argv[1:])
