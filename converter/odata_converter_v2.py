@@ -1,10 +1,14 @@
 """ OData V2 """
 
-from converter.odata_converter import ODataConverter
+from .odata_converter import ODataConverter
 from requests.sessions import session
 
 import requests
 import pyodata
+
+from hotqueue import HotQueue
+
+queue = HotQueue("taskqueue", dbfilename="./tmp/redis.rdb")
 
 class ODataConverterV2(ODataConverter):
     def __init__(self, endpoint):
@@ -173,14 +177,20 @@ class ODataConverterV2(ODataConverter):
             os.rename(tmp_file, os.path.abspath(dir) + '/links.csv')
 
     def fetch_pdata(self, dir, force=False):
-        super().convert_links(dir, force)
+        super().fetch_pdata(dir, force)
         
         for es in self._client.schema.entity_sets:
-            print('EntitySet: ' + es.name)
-            entities = self._client.entity_sets._entity_sets[es.name].get_entities().execute()
-            
+            queue.put(es.name)
+
+    @queue.worker
+    def profile(self, esname):
+
+        if esname != None:
+            print('EntitySet: ' + esname)
+            entities = self._client.entity_sets._entity_sets[esname].get_entities().execute()
+
             for entity in entities:
-                proprties = es.entity_type.proprties()
+                proprties = entity._entity_type.proprties()
 
                 header = ''
                 for prop in proprties:

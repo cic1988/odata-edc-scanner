@@ -9,8 +9,13 @@ from converter.odata_converter_v2 import ODataConverterV2
 def execute(args):
     converter = ODataConverterV2(args.SERVICE_ROOT_URL)
 
+    if args.worker:
+        print('worker started...')
+        converter.profile()
+
     if args.verbose:
         converter.print_out_metadata_info()
+
     converter.convert_objects(args.dir, args.force)
     converter.convert_links(args.dir, args.force)
 
@@ -24,6 +29,7 @@ def _parse_args(argv):
     parser.add_argument('--force', '-f', default=False, action='store_true', help='force overwritten the existing objects.csv and links.csv')
     parser.add_argument('--verbose', '-v', default=False, action='store_true')
     parser.add_argument('--resource', default=None, type=str, help='(profiling enabled) resource name')
+    parser.add_argument('--worker', default=False, action='store_true', help='(profiling enabled) start as worker')
     parser.set_defaults(func=execute)
 
     args = parser.parse_args(argv[1:])

@@ -33,7 +33,6 @@ class ODataConverter():
         self._association_endpointentityset = 'com.informatica.ldm.odata.endpointentityset'
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
 
-
     def print_out_metadata_info(self):
         print('... wrong calling base function ...')
     
@@ -82,4 +81,10 @@ class ODataConverter():
         # only do so when the conversion has succeeded.
 
     def fetch_pdata(self, dir, force=False):
-        print()
+        print('... wrong calling base function ...')
+
+    def profile(self, esname):
+        print('... wrong calling base function ...')
+
+    
+
