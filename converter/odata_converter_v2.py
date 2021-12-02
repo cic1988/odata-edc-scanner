@@ -186,7 +186,7 @@ class ODataConverterV2(ODataConverter):
     def profile(self, esname):
         import csv
 
-        if esname != None:
+        if esname:
             print('EntitySet: ' + esname)
             entities = self._client.entity_sets._entity_sets[esname].get_entities().execute()
 
@@ -200,15 +200,17 @@ class ODataConverterV2(ODataConverter):
                     header.append(prop.name)
                 
                 if header:
-                    print(self._dir + '/' + esname + '.csv')
                     with open(self._dir + '/' + esname + '.csv', 'w', encoding='UTF8') as f:
                         writer = csv.writer(f)
                         writer.writerow(header)
 
+                        for entity in entities:
+                            row = []
 
-                    for entity in entities:
-                        row = []
-
-                        for prop in proprties:
-                            row.append(str(getattr(entity, prop.name)))
-                        writer.writerow(row)
+                            for prop in proprties:
+                                """ TODO: Edm.Binary is not allowed to profile """
+                                if prop.typ.name == 'Edm.Binary':
+                                    row.append(None)
+                                    continue
+                                row.append(str(getattr(entity, prop.name)))
+                            writer.writerow(row)
