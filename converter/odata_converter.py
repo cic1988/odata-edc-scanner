@@ -3,8 +3,9 @@
 """ TODO: V4 open """
 
 class ODataConverter():
-    def __init__(self, endpoint):
+    def __init__(self, endpoint, dir):
         self._endpoint = endpoint
+        self._dir = dir
 
         """ objects.csv / links.csv protocol """
         self._objects_head = {}
@@ -36,14 +37,14 @@ class ODataConverter():
     def print_out_metadata_info(self):
         print('... wrong calling base function ...')
     
-    def convert_objects(self, dir, force=False):
+    def convert_objects(self, force=False):
         """ create objects.csv """
         import os
-        assert os.path.exists(dir), "given dir not found: " + str(dir)
+        assert os.path.exists(self._dir), "given dir not found: " + str(self._dir)
 
         if not force:
-            assert os.path.exists(dir + '/links.csv') == False, "links.csv exists in: " + str(dir)
-            assert os.path.exists(dir + '/objects.csv') == False, "objects.csv exists in: " + str(dir)
+            assert os.path.exists(self._dir + '/links.csv') == False, "links.csv exists in: " + str(self._dir)
+            assert os.path.exists(self._dir + '/objects.csv') == False, "objects.csv exists in: " + str(self._dir)
 
         self._objects_head = {
             'class': '',
@@ -63,14 +64,14 @@ class ODataConverter():
         # do not overwrite the existing files yet
         # only do so when the conversion has succeeded.
 
-    def convert_links(self, dir, force=False):
+    def convert_links(self, force=False):
         """ create links.csv """
         import os
-        assert os.path.exists(dir), "given dir not found: " + str(dir)
+        assert os.path.exists(self._dir), "given dir not found: " + str(self._dir)
 
         if not force:
-            assert os.path.exists(dir + '/links.csv') == False, "links.csv exists in: " + str(dir)
-            assert os.path.exists(dir + '/objects.csv') == False, "objects.csv exists in: " + str(dir)
+            assert os.path.exists(self._dir + '/links.csv') == False, "links.csv exists in: " + str(self._dir)
+            assert os.path.exists(self._dir + '/objects.csv') == False, "objects.csv exists in: " + str(self._dir)
 
         self._links_head = {
             'association': '',
@@ -80,7 +81,7 @@ class ODataConverter():
         # do not overwrite the existing files yet
         # only do so when the conversion has succeeded.
 
-    def fetch_pdata(self, dir, force=False):
+    def fetch_pdata(self, force=False):
         print('... wrong calling base function ...')
 
     def profile(self, esname):

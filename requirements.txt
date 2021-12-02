@@ -1,3 +1,4 @@
 requests
 pyodata
 redislite-hotqueue
+fuckit

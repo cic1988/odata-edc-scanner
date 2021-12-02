@@ -7,20 +7,21 @@ from getpass import getpass
 from converter.odata_converter_v2 import ODataConverterV2
 
 def execute(args):
-    converter = ODataConverterV2(args.SERVICE_ROOT_URL)
+    converter = ODataConverterV2(args.SERVICE_ROOT_URL, args.dir)
 
     if args.worker:
+        print('dir set: ' + args.dir)
         print('worker started...')
         converter.profile()
 
     if args.verbose:
         converter.print_out_metadata_info()
 
-    converter.convert_objects(args.dir, args.force)
-    converter.convert_links(args.dir, args.force)
+    converter.convert_objects(args.force)
+    converter.convert_links(args.force)
 
     if args.resource:
-        converter.fetch_pdata(args.dir, args.force)
+        converter.fetch_pdata(args.force)
 
 def _parse_args(argv):
     parser = ArgumentParser()

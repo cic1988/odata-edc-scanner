@@ -5,14 +5,15 @@ from requests.sessions import session
 
 import requests
 import pyodata
+import fuckit
 
 from hotqueue import HotQueue
 
 queue = HotQueue("taskqueue", dbfilename="./tmp/redis.rdb")
 
 class ODataConverterV2(ODataConverter):
-    def __init__(self, endpoint):
-        ODataConverter.__init__(self, endpoint)
+    def __init__(self, endpoint, dir):
+        ODataConverter.__init__(self, endpoint, dir)
         self._session = requests.Session()
         self._client = pyodata.Client(endpoint, self._session)
 
@@ -42,8 +43,8 @@ class ODataConverterV2(ODataConverter):
             if fs.return_type is not None:
                 print(f' < {fs.return_type.name}')
 
-    def convert_objects(self, dir, force=False):
-        super().convert_objects(dir, force)
+    def convert_objects(self, force=False):
+        super().convert_objects(force)
 
         """ create tmp file """
         import csv
@@ -51,7 +52,7 @@ class ODataConverterV2(ODataConverter):
         import os
         import copy
 
-        tmp_file = os.path.abspath(dir) + '/objects.csv.' + uuid.uuid4().hex.upper()[0:6]
+        tmp_file = os.path.abspath(self._dir) + '/objects.csv.' + uuid.uuid4().hex.upper()[0:6]
 
         with open(tmp_file, 'w', encoding='UTF8', newline='') as f:
             writer = csv.DictWriter(f, self._objects_head.keys())
@@ -123,10 +124,10 @@ class ODataConverterV2(ODataConverter):
                     writer.writerow(column)
 
         if os.path.exists(tmp_file):
-            os.rename(tmp_file, os.path.abspath(dir) + '/objects.csv')
+            os.rename(tmp_file, os.path.abspath(self._dir) + '/objects.csv')
 
-    def convert_links(self, dir, force=False):
-        super().convert_links(dir, force)
+    def convert_links(self, force=False):
+        super().convert_links(force)
 
         """ create tmp file """
         import csv
@@ -134,7 +135,7 @@ class ODataConverterV2(ODataConverter):
         import os
         import copy
 
-        tmp_file = os.path.abspath(dir) + '/links.csv.' + uuid.uuid4().hex.upper()[0:6]
+        tmp_file = os.path.abspath(self._dir) + '/links.csv.' + uuid.uuid4().hex.upper()[0:6]
 
         with open(tmp_file, 'w', encoding='UTF8', newline='') as f:
              writer = csv.DictWriter(f, self._links_head.keys())
@@ -174,32 +175,40 @@ class ODataConverterV2(ODataConverter):
                     writer.writerow(entitysetproperty)
         
         if os.path.exists(tmp_file):
-            os.rename(tmp_file, os.path.abspath(dir) + '/links.csv')
+            os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
 
-    def fetch_pdata(self, dir, force=False):
-        super().fetch_pdata(dir, force)
-        
+    def fetch_pdata(self, force=False):
         for es in self._client.schema.entity_sets:
             queue.put(es.name)
 
     @queue.worker
+    @fuckit
     def profile(self, esname):
+        import csv
 
         if esname != None:
             print('EntitySet: ' + esname)
             entities = self._client.entity_sets._entity_sets[esname].get_entities().execute()
 
-            for entity in entities:
+            """ only profile when entities """
+            if entities:
+                entity = entities[0]
                 proprties = entity._entity_type.proprties()
 
-                header = ''
+                header = []
                 for prop in proprties:
-                    header += prop.name + ','
+                    header.append(prop.name)
+                
+                if header:
+                    print(self._dir + '/' + esname + '.csv')
+                    with open(self._dir + '/' + esname + '.csv', 'w', encoding='UTF8') as f:
+                        writer = csv.writer(f)
+                        writer.writerow(header)
 
-                print(header)
 
-                row = ''
+                    for entity in entities:
+                        row = []
 
-                for prop in proprties:
-                    row += str(getattr(entity, prop.name)) + ','
-                print(row)
+                        for prop in proprties:
+                            row.append(str(getattr(entity, prop.name)))
+                        writer.writerow(row)
