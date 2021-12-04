@@ -3,13 +3,14 @@
 import sys
 
 from argparse import ArgumentParser
-from getpass import getpass
+from multiprocessing import Pool
 from converter.odata_converter_v2 import ODataConverterV2
 
 def execute(args):
     converter = ODataConverterV2(args.SERVICE_ROOT_URL, args.dir)
 
     if args.worker:
+        pool = Pool(processes=args.worker)
         print('dir set: ' + args.dir)
         print('worker started...')
         converter.profile()
@@ -30,7 +31,7 @@ def _parse_args(argv):
     parser.add_argument('--force', '-f', default=False, action='store_true', help='force overwritten the existing objects.csv and links.csv')
     parser.add_argument('--verbose', '-v', default=False, action='store_true')
     parser.add_argument('--resource', default=None, type=str, help='(profiling enabled) resource name')
-    parser.add_argument('--worker', default=False, action='store_true', help='(profiling enabled) start as worker')
+    parser.add_argument('--worker', default=1, type=int, help='(profiling enabled) number of workers')
     parser.set_defaults(func=execute)
 
     args = parser.parse_args(argv[1:])
