@@ -34,15 +34,14 @@ def execute(args):
     print(f'[... DIR: {dir} ...]')
     print(f'[... RESORUCE NAME: {resource} ...]')
     print(f'[... NUMBER OF WORKERS: {worker} ...]')
+    print(f'[... AS WORKER: {args.asworker} ...]')
     print(f'[... OVERWRITTEN: {args.force} ...]')
     print(f'[... VERBOSE: {args.verbose} ...]')
 
-    converter = ODataConverterV2(root_url, dir)
+    converter = ODataConverterV2(root_url, dir, worker, args.asworker_id)
 
-    if worker:
-        #pool = Pool(processes=args.worker)
-        #result = pool.apply_async(converter.profile, ())
-        print('[... WORKER START ...')
+    if args.asworker:
+        print('[... WORKER START ...]')
         converter.profile()
         return
 
@@ -63,6 +62,8 @@ def _parse_args(argv):
     parser.add_argument('--verbose', '-v', default=False, action='store_true')
     parser.add_argument('--resource', default=None, type=str, help='(profiling enabled) resource name')
     parser.add_argument('--worker', default=1, type=int, help='(profiling enabled) number of workers')
+    parser.add_argument('--asworker', default=False, action='store_true', help='(profiling enabled) start process as worker')
+    parser.add_argument('--asworker_id', default=1, type=int, help='(profiling enabled) start process as worker with id x')
     parser.set_defaults(func=execute)
 
     args = parser.parse_args(argv[1:])

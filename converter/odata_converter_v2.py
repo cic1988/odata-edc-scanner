@@ -8,8 +8,8 @@ import pyodata
 import fuckit
 
 class ODataConverterV2(ODataConverter):
-    def __init__(self, endpoint, dir):
-        ODataConverter.__init__(self, endpoint, dir)
+    def __init__(self, endpoint, dir, worker, worker_id=0):
+        ODataConverter.__init__(self, endpoint, dir, worker, worker_id)
         self._session = requests.Session()
         self._client = pyodata.Client(endpoint, self._session)
 
@@ -177,9 +177,11 @@ class ODataConverterV2(ODataConverter):
         q = get_taskqueue('profiling')
         for es in self._client.schema.entity_sets:
             q.put(es.name)
+        
+        super().invoke_worker()
 
     #@fuckit
-    @worker('profiling')
+    @worker('profiling', timeout=5)
     def profile(self, esname):
         import csv
 
