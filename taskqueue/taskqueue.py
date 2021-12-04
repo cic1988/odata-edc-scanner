@@ -14,6 +14,10 @@ def get_taskqueue(name):
     file = sys.argv[0]
     pathname = os.path.dirname(os.path.abspath(file))
     pathname = pathname + "/" + dbfilename
+
+    if not os.path.exists(os.path.dirname(pathname)):
+        os.makedirs(os.path.dirname(pathname))
+
     return HotQueue(queuename, dbfilename=pathname)
 
 
