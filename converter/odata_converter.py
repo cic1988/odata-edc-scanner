@@ -78,14 +78,9 @@ class ODataConverter():
             'fromObjectIdentity': '',
             'toObjectIdentity': ''
         }
-        # do not overwrite the existing files yet
-        # only do so when the conversion has succeeded.
 
     def fetch_pdata(self, force=False):
         print('... wrong calling base function ...')
 
     def profile(self, esname):
-        print('... wrong calling base function ...')
-
-    
-
+        print(f'[... START PROFILING JOB: {esname}]')

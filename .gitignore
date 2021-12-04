@@ -9,4 +9,5 @@ test*/*
 pip-selfcheck.json
 pyvenv.cfg
 converter/__pycache__/*
+taskqueue/__pycache__/*
 tmp/*

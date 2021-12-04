@@ -1,15 +1,11 @@
 """ OData V2 """
 
 from .odata_converter import ODataConverter
-from requests.sessions import session
+from taskqueue.taskqueue import worker, get_taskqueue
 
 import requests
 import pyodata
 import fuckit
-
-from hotqueue import HotQueue
-
-queue = HotQueue("taskqueue", dbfilename="./tmp/redis.rdb")
 
 class ODataConverterV2(ODataConverter):
     def __init__(self, endpoint, dir):
@@ -178,16 +174,17 @@ class ODataConverterV2(ODataConverter):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
 
     def fetch_pdata(self, force=False):
+        q = get_taskqueue('profiling')
         for es in self._client.schema.entity_sets:
-            queue.put(es.name)
+            q.put(es.name)
 
-    @queue.worker
-    @fuckit
+    #@fuckit
+    @worker('profiling')
     def profile(self, esname):
         import csv
 
         if esname:
-            print('EntitySet: ' + esname)
+            super().profile(esname)
             entities = self._client.entity_sets._entity_sets[esname].get_entities().execute()
 
             """ only profile when entities """

@@ -10,10 +10,12 @@ def execute(args):
     converter = ODataConverterV2(args.SERVICE_ROOT_URL, args.dir)
 
     if args.worker:
-        pool = Pool(processes=args.worker)
+        #pool = Pool(processes=args.worker)
+        #result = pool.apply_async(converter.profile, ())
         print('dir set: ' + args.dir)
         print('worker started...')
         converter.profile()
+        return
 
     if args.verbose:
         converter.print_out_metadata_info()
@@ -37,13 +39,18 @@ def _parse_args(argv):
     args = parser.parse_args(argv[1:])
     return args
 
-
 def _main(argv):
     args = _parse_args(argv)
+    print('[... START SCANNING ...]')
+    print(f'[... ROOT_URL: {args.SERVICE_ROOT_URL} ...]')
+    print(f'[... DIR: {args.dir} ...]')
+    print(f'[... RESORUCE NAME: {args.resource} ...]')
+    print(f'[... NUMBER OF WORKERS: {args.dir} ...]')
+    print(f'[... OVERWRITTEN: {args.force} ...]')
+    print(f'[... VERBOSE: {args.verbose} ...]')
     args.func(args)
-    print('[... done ...!]')
+    print('[... DONE ...]')
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(_main(sys.argv))
