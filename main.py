@@ -4,16 +4,45 @@ import sys
 
 from argparse import ArgumentParser
 from multiprocessing import Pool
+from configparser import ConfigParser
 from converter.odata_converter_v2 import ODataConverterV2
 
 def execute(args):
-    converter = ODataConverterV2(args.SERVICE_ROOT_URL, args.dir)
+    """ read initial setup from ini firstly """
+    import os
+    import sys
 
-    if args.worker:
+    file = sys.argv[0]
+    pathname = os.path.dirname(os.path.abspath(file))
+
+    cp = ConfigParser()
+    cp.read(pathname + '/config.ini')
+    root_url = cp.get('local', 'root_url')
+    dir = cp.get('local', 'dir')
+    worker = cp.get('local', 'worker')
+    resource = cp.get('local', 'resource')
+
+    root_url = root_url if not args.SERVICE_ROOT_URL else root_url
+    dir = dir if not args.dir else dir
+    worker = worker if not args.worker else worker
+    resource = resource if not args.resource else resource
+
+    """ a bit verbose """
+
+    print('[... START SCANNING ...]')
+    print(f'[... ROOT_URL: {root_url} ...]')
+    print(f'[... DIR: {dir} ...]')
+    print(f'[... RESORUCE NAME: {resource} ...]')
+    print(f'[... NUMBER OF WORKERS: {worker} ...]')
+    print(f'[... OVERWRITTEN: {args.force} ...]')
+    print(f'[... VERBOSE: {args.verbose} ...]')
+
+    converter = ODataConverterV2(root_url, dir)
+
+    if worker:
         #pool = Pool(processes=args.worker)
         #result = pool.apply_async(converter.profile, ())
-        print('dir set: ' + args.dir)
-        print('worker started...')
+        print('[... WORKER START ...')
         converter.profile()
         return
 
@@ -23,12 +52,12 @@ def execute(args):
     converter.convert_objects(args.force)
     converter.convert_links(args.force)
 
-    if args.resource:
+    if resource:
         converter.fetch_pdata(args.force)
 
 def _parse_args(argv):
     parser = ArgumentParser()
-    parser.add_argument('SERVICE_ROOT_URL', type=str)
+    parser.add_argument('SERVICE_ROOT_URL', type=str, nargs='?')
     parser.add_argument('--dir', default=None, type=str, help='directory to save objects.csv and links.csv')
     parser.add_argument('--force', '-f', default=False, action='store_true', help='force overwritten the existing objects.csv and links.csv')
     parser.add_argument('--verbose', '-v', default=False, action='store_true')
@@ -41,13 +70,6 @@ def _parse_args(argv):
 
 def _main(argv):
     args = _parse_args(argv)
-    print('[... START SCANNING ...]')
-    print(f'[... ROOT_URL: {args.SERVICE_ROOT_URL} ...]')
-    print(f'[... DIR: {args.dir} ...]')
-    print(f'[... RESORUCE NAME: {args.resource} ...]')
-    print(f'[... NUMBER OF WORKERS: {args.dir} ...]')
-    print(f'[... OVERWRITTEN: {args.force} ...]')
-    print(f'[... VERBOSE: {args.verbose} ...]')
     args.func(args)
     print('[... DONE ...]')
     return 0
