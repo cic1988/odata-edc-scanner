@@ -35,14 +35,20 @@ def execute(args):
     print(f'[... RESORUCE NAME: {resource} ...]')
     print(f'[... NUMBER OF WORKERS: {worker} ...]')
     print(f'[... AS WORKER: {args.asworker} ...]')
+    print(f'[... AS CONSUMER: {args.asconsumer} ...]')
     print(f'[... OVERWRITTEN: {args.force} ...]')
     print(f'[... VERBOSE: {args.verbose} ...]')
 
-    converter = ODataConverterV2(root_url, dir, worker, args.asworker_id)
+    converter = ODataConverterV2(root_url, dir, resource, worker, args.asworker_id)
 
     if args.asworker:
         print('[... WORKER START ...]')
         converter.profile()
+        return
+    
+    if args.asconsumer:
+        print('[... CONSUMER START ...]')
+        converter.prepare_dataset_mapping()
         return
 
     if args.verbose:
@@ -65,6 +71,7 @@ def _parse_args(argv):
     parser.add_argument('--worker', default=1, type=int, help='(profiling enabled) number of workers')
     parser.add_argument('--asworker', default=False, action='store_true', help='(profiling enabled) start process as worker')
     parser.add_argument('--asworker_id', default=1, type=int, help='(profiling enabled) start process as worker with id x')
+    parser.add_argument('--asconsumer', default=False, action='store_true', help='(profiling enabled) start process as consumer')
     parser.set_defaults(func=execute)
 
     args = parser.parse_args(argv[1:])

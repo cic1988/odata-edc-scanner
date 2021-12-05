@@ -1,15 +1,15 @@
 """ OData V2 """
 
 from .odata_converter import ODataConverter
-from taskqueue.taskqueue import worker, get_taskqueue
+from taskqueue.taskqueue import consumer, worker, get_taskqueue, get_consumerqueue
 
 import requests
 import pyodata
 import fuckit
 
 class ODataConverterV2(ODataConverter):
-    def __init__(self, endpoint, dir, worker, worker_id=0):
-        ODataConverter.__init__(self, endpoint, dir, worker, worker_id)
+    def __init__(self, endpoint, dir, resource, worker, worker_id=0):
+        ODataConverter.__init__(self, endpoint, dir, resource, worker, worker_id)
         self._session = requests.Session()
         self._client = pyodata.Client(endpoint, self._session)
 
@@ -213,3 +213,23 @@ class ODataConverterV2(ODataConverter):
                                     continue
                                 row.append(str(getattr(entity, prop.name)))
                             writer.writerow(row)
+            
+            """ put dataset identifier into consumer queue """
+            get_consumerqueue('profiling').put({
+                'id': 'Endpoint/' + esname,
+                'file': self._dir + '/' + esname + '.csv'
+            })
+    
+    @consumer('profiling', timeout=5)
+    def prepare_dataset_mapping(self, obj):
+        import os
+        import csv
+
+        if os.path.exists(self._dir):
+            with open(self._dir + f'/{self._resource}_DatasetMapping.csv', 'a') as f:
+                writer = csv.writer(f, delimiter=',')
+                writer.writerow([
+                    obj['id'],
+                    self._association_entitysetproperty,
+                    self._model_property_datatype,
+                    os.path.abspath(obj['file'])])

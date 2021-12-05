@@ -3,11 +3,12 @@
 """ TODO: V4 open """
 
 class ODataConverter():
-    def __init__(self, endpoint, dir, worker, worker_id=0):
+    def __init__(self, endpoint, dir, resource, worker, worker_id=0):
         self._endpoint = endpoint
         self._dir = dir
         self._worker = worker
         self._workerid = worker_id
+        self._resource = resource
 
         """ objects.csv / links.csv protocol """
         self._objects_head = {}
@@ -104,6 +105,18 @@ class ODataConverter():
             end = time.time()
             print(f'[... PROFILING FINISHED IN {end-start} SECONDS ...]')
 
+            """ start consumer process """
+            import os
+            import csv
+
+            if os.path.exists(self._dir):
+                with open(self._dir + f'/{self._resource}_DatasetMapping.csv', 'w') as f:
+                    print(f'[... CREATETING {self._dir}/{self._resource}_DatasetMapping.csv ...]')
+                    writer = csv.writer(f, delimiter=',')
+                    writer.writerow(['DatasetId','AssociationType','DataTypeAttribute','DatasetFilePath'])
+                    p = Popen(['./main.py', '--asconsumer', '-f'])
+                    stdout, stderr = p.communicate()
+
         """
         for i in range(int(self._worker)):
             args = ['./main.py', '--asworker', '-f', '--asworker_id=' + str(i+1)]
@@ -158,5 +171,8 @@ class ODataConverter():
 
         else:
             print('[... NO DIR FOR PROFILING IS GIVEN...]')
+    
+    def prepare_dataset_mapping(self, obj):
+        print(obj)
         
 
