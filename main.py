@@ -53,6 +53,7 @@ def execute(args):
 
     if resource:
         converter.fetch_pdata(args.force)
+        converter.create_profiling_constant_files(resource, args.force)
 
 def _parse_args(argv):
     parser = ArgumentParser()
@@ -72,7 +73,12 @@ def _parse_args(argv):
 def _main(argv):
     args = _parse_args(argv)
     args.func(args)
-    print('[... DONE ...]')
+
+    if args.asworker:
+        print(f'[... WORKER {args.asworker_id} DONE ...]')
+    else:
+        print(f'[... MAIN DONE ...]')
+
     return 0
 
 if __name__ == '__main__':

@@ -86,13 +86,77 @@ class ODataConverter():
     
     def invoke_worker(self):
         from multiprocessing import Process
+        from subprocess import Popen, PIPE
         import main
 
+        def exec_(i):
+            p = Popen(['./main.py', '--asworker', '-f', '--asworker_id=' + str(i)])
+            stdout, stderr = p.communicate()
+  
+        from concurrent.futures import ThreadPoolExecutor
+        import time
+
+        with ThreadPoolExecutor(max_workers=int(self._worker)) as executor:
+            start = time.time()
+            futures = executor.map(exec_, range(int(self._worker)))
+            for future in futures:
+                pass
+            end = time.time()
+            print(f'[... PROFILING FINISHED IN {end-start} SECONDS ...]')
+
+        """
         for i in range(int(self._worker)):
             args = ['./main.py', '--asworker', '-f', '--asworker_id=' + str(i+1)]
             p = Process(target=main._main, args=(args,))
             p.start()
+        """
 
     def profile(self, esname):
         import os
         print(f'[... (WORKER {self._workerid} - PID {os.getpid()}) START PROFILING JOB: {esname}]')
+    
+    def create_profiling_constant_files(self, resource, force):
+
+        import os
+        import csv
+        
+        if os.path.exists(self._dir):
+            """
+            create or overwrite {Resourcename}_DatatypeMapping.csv
+
+            Data type refer to:
+            ODATA: https://www.odata.org/documentation/odata-version-2-0/overview/
+            EDC: https://knowledge.informatica.com/s/article/Custom-Scanner-Profiling-in-Enterprise-Data-Catalog?language=en_US&type=external
+            """
+
+            with open(self._dir + f'/{resource}_DatatypeMapping.csv', 'w') as f:
+                print(f'[... CREATETING {self._dir}/{resource}_DatatypeMapping.csv ...]')
+                writer = csv.writer(f, delimiter=',')
+                writer.writerow(['CustomType','EDCType'])
+                writer.writerow(['Edm.Int32','Number'])
+                writer.writerow(['Edm.Boolean','Boolean'])
+                writer.writerow(['Edm.Byte','Binary'])
+                writer.writerow(['Edm.DateTime','DateTime'])
+                writer.writerow(['Edm.Decimal','Double'])
+                writer.writerow(['Edm.Double','Double'])
+                writer.writerow(['Edm.Single','Double'])
+                writer.writerow(['Edm.Guid','String'])
+                writer.writerow(['Edm.Int16','Number'])
+                writer.writerow(['Edm.Int32','Number'])
+                writer.writerow(['Edm.Int64','BigInteger'])
+                writer.writerow(['Edm.SByte','Binary'])
+                writer.writerow(['Edm.String','String'])
+                writer.writerow(['Edm.Time','DateTime'])
+                writer.writerow(['Edm.DateTimeOffset','TimeStampWithTZ'])
+
+            """ create or overwrite ProfileableClassTypes.csv """
+            
+            with open(self._dir + '/ProfileableClassTypes.csv', 'w') as f:
+                print(f'[... CREATETING {self._dir}/ProfileableClassTypes.csv ...]')
+                f.write('com.informatica.ldm.odata.property')
+                f.close()
+
+        else:
+            print('[... NO DIR FOR PROFILING IS GIVEN...]')
+        
+
