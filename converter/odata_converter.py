@@ -37,6 +37,26 @@ class ODataConverter():
         self._association_endpointentityset = 'com.informatica.ldm.odata.endpointentityset'
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
 
+        """ 4) data type mapping """
+
+        self._datatype = {
+            'Edm.Int16': 'INT',
+            'Edm.Int64': 'INT',
+            'Edm.Int32': 'INT',
+            'Edm.Guid': 'VARCHAR',
+            'Edm.String': 'VARCHAR',
+            'Edm.Byte': 'VARCHAR',
+            'Edm.SByte': 'VARCHAR',
+            'Edm.Binary': 'BINARY',
+            'Edm.DateTimeOffset': 'TIMESTAMP',
+            'Edm.Decimal': 'DECIMAL',
+            'Edm.Single': 'DECIMAL',
+            'Edm.Time': 'TIMESTAMP',
+            'Edm.DateTime': 'TIMESTAMP',
+            'Edm.Double': 'DECIMAL',
+            'Edm.Boolean': 'BIT',
+        }
+
     def print_out_metadata_info(self):
         print('... wrong calling base function ...')
     
@@ -135,12 +155,14 @@ class ODataConverter():
         
         if os.path.exists(self._dir):
             """
-            create or overwrite {Resourcename}_DatatypeMapping.csv
+            TODO: create or overwrite {Resourcename}_DatatypeMapping.csv
 
             Data type refer to:
             ODATA: https://www.odata.org/documentation/odata-version-2-0/overview/
             EDC: https://knowledge.informatica.com/s/article/Custom-Scanner-Profiling-in-Enterprise-Data-Catalog?language=en_US&type=external
-            """
+
+            Since using com.infa.ldm.relational, the corresponding data type is re-sued;
+            no {Resourcename}_DatatypeMapping.csv will be used.
 
             with open(self._dir + f'/{resource}_DatatypeMapping.csv', 'w') as f:
                 print(f'[... CREATETING {self._dir}/{resource}_DatatypeMapping.csv ...]')
@@ -161,6 +183,7 @@ class ODataConverter():
                 writer.writerow(['Edm.String','String'])
                 writer.writerow(['Edm.Time','DateTime'])
                 writer.writerow(['Edm.DateTimeOffset','TimeStampWithTZ'])
+            """
 
             """ create or overwrite ProfileableClassTypes.csv """
             
