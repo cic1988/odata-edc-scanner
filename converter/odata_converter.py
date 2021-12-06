@@ -24,14 +24,14 @@ class ODataConverter():
 
         """ 2) attribute """
         self._model_entityset_entitytype = 'com.informatica.ldm.odata.ENTITYTYPE'
-        self._model_property_primarykey = 'com.informatica.ldm.odata.PrimaryKeyColumn'
-        self._model_property_datatype = 'com.informatica.ldm.odata.DATATYPE'
+        self._model_property_primarykey = 'com.infa.ldm.relational.PrimaryKeyColumn'
+        self._model_property_datatype = 'com.infa.ldm.relational.Datatype'
         self._model_property_odataversion = 'com.informatica.ldm.odata.ODATAVERSION'
-        self._model_property_nullable = 'com.informatica.ldm.odata.NULLABLE'
-        self._model_property_maxlength = 'com.informatica.ldm.odata.MAXLENGTH'
-        self._model_property_fixedlength = 'com.informatica.ldm.odata.FIXEDLENGTH'
-        self._model_property_precision = 'com.informatica.ldm.odata.PRECISION'
-        self._model_property_scale = 'com.informatica.ldm.odata.SCALE'
+        self._model_property_nullable = 'com.infa.ldm.relational.Nullable'
+        self._model_property_maxlength = 'com.infa.ldm.relational.DatatypeLength'
+        self._model_property_fixedlength = 'com.infa.ldm.relational.DatatypeLength'
+        self._model_property_precision = 'com.infa.ldm.relational.DatatypeLength'
+        self._model_property_scale = 'com.infa.ldm.relational.DatatypeScale'
 
         """ 3) association """
         self._association_endpointentityset = 'com.informatica.ldm.odata.endpointentityset'

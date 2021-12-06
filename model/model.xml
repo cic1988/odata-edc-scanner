@@ -10,8 +10,12 @@
             <packageName>core</packageName>
             <version>1</version>
         </requiredPackage>
+        <requiredPackage>
+            <packageName>com.infa.ldm.relational</packageName>
+            <version>26</version>
+        </requiredPackage>
     </requiredPackages>
-    <version>5</version>
+    <version>6</version>
     <classes>
         <class>
             <name>endpoint</name>
@@ -114,7 +118,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
@@ -132,7 +136,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
@@ -167,7 +171,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
@@ -184,7 +188,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
@@ -201,7 +205,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
@@ -218,7 +222,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
@@ -235,7 +239,7 @@
             <suggestable>false</suggestable>
             <sortable>false</sortable>
             <visible>true</visible>
-            <deprecated>false</deprecated>
+            <deprecated>true</deprecated>
             <derived>false</derived>
             <fuzzy>false</fuzzy>
             <data>false</data>
