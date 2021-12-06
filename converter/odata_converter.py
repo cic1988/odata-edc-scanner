@@ -189,6 +189,13 @@ class ODataConverter():
             
             with open(self._dir + '/ProfileableClassTypes.csv', 'w') as f:
                 print(f'[... CREATETING {self._dir}/ProfileableClassTypes.csv ...]')
+
+                """
+                TODO: seems a bug in EDC.
+                If only one-liner in the file, the line is not read.
+                Therefore workaround to write a dummy row in the beginning row
+                """
+                f.write('com.informatica.ldm.odata.AAAAA')
                 f.write('com.informatica.ldm.odata.property')
                 f.close()
 
