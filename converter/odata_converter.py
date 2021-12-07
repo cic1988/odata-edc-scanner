@@ -125,7 +125,6 @@ class ODataConverter():
             end = time.time()
             print(f'[... PROFILING FINISHED IN {end-start} SECONDS ...]')
 
-            """ start consumer process """
             import os
             import csv
 
@@ -134,15 +133,9 @@ class ODataConverter():
                     print(f'[... CREATETING {self._dir}/{self._resource}_DatasetMapping.csv ...]')
                     writer = csv.writer(f, delimiter=',')
                     writer.writerow(['DatasetId','AssociationType','DataTypeAttribute','DatasetFilePath'])
+                    f.close()
                     p = Popen(['./main.py', '--asconsumer', '-f'])
                     stdout, stderr = p.communicate()
-
-        """
-        for i in range(int(self._worker)):
-            args = ['./main.py', '--asworker', '-f', '--asworker_id=' + str(i+1)]
-            p = Process(target=main._main, args=(args,))
-            p.start()
-        """
 
     def profile(self, esname):
         import os

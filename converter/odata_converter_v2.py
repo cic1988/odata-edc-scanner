@@ -174,10 +174,14 @@ class ODataConverterV2(ODataConverter):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
 
     def fetch_pdata(self, force=False):
-        q = get_taskqueue('profiling')
+        profiling_q = get_taskqueue('profiling')
+        consumer_q = get_consumerqueue('profiling')
+        profiling_q.clear()
+        consumer_q.clear()
+
         for es in self._client.schema.entity_sets:
-            q.put(es.name)
-        
+            profiling_q.put(es.name)
+
         super().invoke_worker()
 
     #@fuckit
