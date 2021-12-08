@@ -3,4 +3,3 @@ pyodata
 redis
 redislite
 redislite-hotqueue
-fuckit

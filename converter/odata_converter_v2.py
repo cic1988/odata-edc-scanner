@@ -5,7 +5,6 @@ from taskqueue.taskqueue import consumer, worker, get_taskqueue, get_consumerque
 
 import requests
 import pyodata
-import fuckit
 
 class ODataConverterV2(ODataConverter):
     def __init__(self, endpoint, dir, resource, worker, worker_id=0):
@@ -184,7 +183,6 @@ class ODataConverterV2(ODataConverter):
 
         super().invoke_worker()
 
-    #@fuckit
     @worker('profiling', timeout=5)
     def profile(self, esname):
         import csv
