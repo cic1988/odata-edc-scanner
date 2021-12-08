@@ -21,6 +21,7 @@ def execute(args):
     dir = cp.get('local', 'dir')
     worker = cp.get('local', 'worker', fallback=1)
     resource = cp.get('local', 'resource', fallback=None)
+    profiling_lines = cp.get('local', 'profiling_lines', fallback=1000)
 
     root_url = root_url if not args.SERVICE_ROOT_URL else root_url
     dir = dir if not args.dir else dir
@@ -33,6 +34,7 @@ def execute(args):
     print(f'[... ROOT_URL: {root_url} ...]')
     print(f'[... DIR: {dir} ...]')
     print(f'[... RESORUCE NAME: {resource} ...]')
+    print(f'[... PROFILING LINES: {profiling_lines} ...]')
     print(f'[... NUMBER OF WORKERS: {worker} ...]')
     print(f'[... AS WORKER: {args.asworker} ...]')
     print(f'[... AS CONSUMER: {args.asconsumer} ...]')
@@ -40,6 +42,7 @@ def execute(args):
     print(f'[... VERBOSE: {args.verbose} ...]')
 
     converter = ODataConverterV2(root_url, dir, resource, worker, args.asworker_id)
+    converter.set_profiling_lines(profiling_lines)
 
     if args.asworker:
         print('[... WORKER START ...]')

@@ -9,6 +9,7 @@ class ODataConverter():
         self._worker = worker
         self._workerid = worker_id
         self._resource = resource
+        self._profling_lines = 1000
 
         """ objects.csv / links.csv protocol """
         self._objects_head = {}
@@ -101,9 +102,12 @@ class ODataConverter():
             'fromObjectIdentity': '',
             'toObjectIdentity': ''
         }
+    
+    def set_profiling_lines(self, lines=100):
+        self._profling_lines = lines
 
     def fetch_pdata(self, force=False):
-        print('... wrong calling base function ...')
+        print('... wrongly calling base function ...')
     
     def invoke_worker(self):
         from multiprocessing import Process

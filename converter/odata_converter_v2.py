@@ -189,7 +189,7 @@ class ODataConverterV2(ODataConverter):
 
         if esname:
             super().profile(esname)
-            entities = self._client.entity_sets._entity_sets[esname].get_entities().execute()
+            entities = self._client.entity_sets._entity_sets[esname].get_entities().top(self._profling_lines).execute()
 
             """ only profile when entities """
             if entities:
