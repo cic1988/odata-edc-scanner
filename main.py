@@ -89,9 +89,11 @@ def _main(argv):
     return 0
 
 if __name__ == '__main__':
-    """ otherwise error """
-    """ see: https://github.com/pyinstaller/pyinstaller/wiki/Recipe-Multiprocessing """
-    """      https://stackoverflow.com/questions/46335842/python-multiprocessing-throws-error-with-argparse-and-pyinstaller"""
+    """
+    multiprocessing.freeze_support() otherwise in error pyinstaller, see:
+    - https://github.com/pyinstaller/pyinstaller/wiki/Recipe-Multiprocessing
+    - https://stackoverflow.com/questions/46335842/python-multiprocessing-throws-error-with-argparse-and-pyinstaller
+    """
     import multiprocessing
     multiprocessing.freeze_support()
     sys.exit(_main(sys.argv))
