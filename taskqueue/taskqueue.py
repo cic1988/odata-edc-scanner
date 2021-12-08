@@ -12,7 +12,7 @@ def get_taskqueue(name):
     cp.read(pathname + '/config.ini')
     queuename = cp.get('local', 'queuename')
     dbfilename = cp.get('local', 'dbfilename')
-    pathname = pathname + "/" + dbfilename
+    pathname = dbfilename
 
     if not os.path.exists(os.path.dirname(pathname)):
         os.makedirs(os.path.dirname(pathname))
@@ -31,7 +31,7 @@ def get_consumerqueue(name):
     cp.read(pathname + '/config.ini')
     queuename = cp.get('local', 'consumerqueuename')
     dbfilename = cp.get('local', 'dbfilename')
-    pathname = pathname + "/" + dbfilename
+    pathname = dbfilename
 
     if not os.path.exists(os.path.dirname(pathname)):
         os.makedirs(os.path.dirname(pathname))
