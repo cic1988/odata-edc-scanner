@@ -108,10 +108,12 @@ class ODataConverter():
     def invoke_worker(self):
         from multiprocessing import Process
         from subprocess import Popen, PIPE
-        import main
+        import sys
+
+        file = sys.argv[0]
 
         def exec_(i):
-            p = Popen(['./main.py', '--asworker', '-f', '--asworker_id=' + str(i)])
+            p = Popen([file, '--asworker', '-f', '--asworker_id=' + str(i)])
             stdout, stderr = p.communicate()
   
         from concurrent.futures import ThreadPoolExecutor
@@ -134,7 +136,7 @@ class ODataConverter():
                     writer = csv.writer(f, delimiter=',')
                     writer.writerow(['DatasetId','AssociationType','DataTypeAttribute','DatasetFilePath'])
                     f.close()
-                    p = Popen(['./main.py', '--asconsumer', '-f'])
+                    p = Popen([file, '--asconsumer', '-f'])
                     stdout, stderr = p.communicate()
 
     def profile(self, esname):
@@ -188,7 +190,7 @@ class ODataConverter():
                 If only one-liner in the file, the line is not read.
                 Therefore workaround to write a dummy row in the beginning row
                 """
-                f.write('com.informatica.ldm.odata.AAAAA')
+                f.write('com.informatica.ldm.odata.AAAAA\n')
                 f.write('com.informatica.ldm.odata.property')
                 f.close()
 
