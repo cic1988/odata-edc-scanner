@@ -19,8 +19,8 @@ def execute(args):
     cp.read(pathname + '/config.ini')
     root_url = cp.get('local', 'root_url')
     dir = cp.get('local', 'dir')
-    worker = cp.get('local', 'worker')
-    resource = cp.get('local', 'resource')
+    worker = cp.get('local', 'worker', fallback=1)
+    resource = cp.get('local', 'resource', fallback=None)
 
     root_url = root_url if not args.SERVICE_ROOT_URL else root_url
     dir = dir if not args.dir else dir
