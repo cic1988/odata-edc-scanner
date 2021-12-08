@@ -8,7 +8,7 @@
 ; root_url: the ODATA REST API endpoint without query or any other parameters
 ; dir: directory path to save the output files
 ; worker: number of worker to run profiling task
-; resource: name of the resource in EDC
+; resource: name of the resource in EDC; when not given, profiling is disabled
 ;--------------------------------------------------------------
 
 [local]
