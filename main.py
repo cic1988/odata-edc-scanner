@@ -18,6 +18,7 @@ def execute(args):
     cp = ConfigParser()
     cp.read(pathname + '/config.ini')
     root_url = cp.get('local', 'root_url')
+    odata_version = cp.get('local', 'odata_version')
     dir = cp.get('local', 'dir')
     worker = cp.get('local', 'worker', fallback=1)
     resource = cp.get('local', 'resource', fallback=None)
@@ -32,6 +33,7 @@ def execute(args):
 
     print('[... START SCANNING ...]')
     print(f'[... ROOT_URL: {root_url} ...]')
+    print(f'[... ODATA_VERSION: {odata_version} ...]')
     print(f'[... DIR: {dir} ...]')
     print(f'[... RESORUCE NAME: {resource} ...]')
     print(f'[... PROFILING LINES: {profiling_lines} ...]')
@@ -42,7 +44,7 @@ def execute(args):
     print(f'[... VERBOSE: {args.verbose} ...]')
 
     factory = ODataConverterFactory()
-    factory.set_version('v2')
+    factory.set_version(odata_version)
     converter = factory.create_converter(root_url, dir, resource, worker, args.asworker_id)
     converter.set_profiling_lines(profiling_lines)
 

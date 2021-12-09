@@ -6,6 +6,7 @@
 ; queuename: name task queue to process profiling task (only when profiling enabled)
 ; consumerqueuename: name consumer queue to summarize profiling task result (only when profiling enabled)
 ; root_url: the ODATA REST API endpoint without query or any other parameters
+; odata_version: the odata version manually given; v2 and v4 available
 ; dir: directory path to save the output files
 ; worker: number of worker to run profiling task
 ; resource: name of the resource in EDC; when not given, profiling is disabled
@@ -16,6 +17,7 @@ dbfilename = ./tmp/redis.rdb
 queuename = taskqueue
 consumerqueuename = consumerqueue
 root_url = https://services.odata.org/V2/Northwind/Northwind.svc
+odata_version = v2
 dir = ./test2
 worker = 2
 profiling_lines = 1000
