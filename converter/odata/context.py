@@ -2,9 +2,9 @@
 
 import logging
 
-from odata.query import Query
-from odata.connection import ODataConnection
-from odata.exceptions import ODataError
+from .query import Query
+from .connection import ODataConnection
+from .exceptions import ODataError
 
 
 class Context:

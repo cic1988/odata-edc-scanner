@@ -83,7 +83,7 @@ except ImportError:
     # noinspection PyUnresolvedReferences
     from urlparse import urljoin
 
-from odata.state import EntityState
+from .state import EntityState
 
 
 class EntityBase(object):

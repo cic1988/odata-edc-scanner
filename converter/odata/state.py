@@ -5,7 +5,7 @@ import os
 import inspect
 from collections import OrderedDict
 
-from odata.property import PropertyBase, NavigationProperty
+from .property import PropertyBase, NavigationProperty
 
 
 class EntityState(object):

@@ -9,6 +9,7 @@ test*/*
 pip-selfcheck.json
 pyvenv.cfg
 converter/__pycache__/*
+converter/odata/__pycache__/*
 taskqueue/__pycache__/*
 tmp/*
 dist/*

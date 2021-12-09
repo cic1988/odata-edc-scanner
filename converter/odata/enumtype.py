@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-from odata.property import PropertyBase
+from .property import PropertyBase
 
 
 class EnumType(Enum):

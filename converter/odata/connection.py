@@ -7,7 +7,7 @@ import logging
 import requests
 from requests.exceptions import RequestException
 
-from odata import version
+from . import version
 from .exceptions import ODataError, ODataConnectionError
 
 

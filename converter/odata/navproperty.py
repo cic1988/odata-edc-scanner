@@ -43,7 +43,7 @@ class NavigationProperty(object):
     not inherit from PropertyBase.
     """
     def __init__(self, name, entitycls, collection=False, foreign_key=None):
-        from odata.property import PropertyBase
+        from .property import PropertyBase
         self.name = name
         self.entitycls = entitycls
         self.is_collection = collection

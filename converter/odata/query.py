@@ -50,7 +50,7 @@ except ImportError:
     # noinspection PyUnresolvedReferences
     from urlparse import urljoin
 
-import odata.exceptions as exc
+from .exceptions import ODataError as exc
 
 
 class Query(object):

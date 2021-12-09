@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odata.property import PropertyBase
+from .property import PropertyBase
 
 
 class ComplexType(dict):
