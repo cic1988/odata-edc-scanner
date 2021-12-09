@@ -38,26 +38,6 @@ class ODataConverter():
         self._association_endpointentityset = 'com.informatica.ldm.odata.endpointentityset'
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
 
-        """ 4) data type mapping """
-
-        self._datatype = {
-            'Edm.Int16': 'INT',
-            'Edm.Int64': 'INT',
-            'Edm.Int32': 'INT',
-            'Edm.Guid': 'VARCHAR',
-            'Edm.String': 'VARCHAR',
-            'Edm.Byte': 'VARCHAR',
-            'Edm.SByte': 'VARCHAR',
-            'Edm.Binary': 'BINARY',
-            'Edm.DateTimeOffset': 'TIMESTAMP',
-            'Edm.Decimal': 'DECIMAL',
-            'Edm.Single': 'DECIMAL',
-            'Edm.Time': 'TIMESTAMP',
-            'Edm.DateTime': 'TIMESTAMP',
-            'Edm.Double': 'DECIMAL',
-            'Edm.Boolean': 'BIT',
-        }
-
     def print_out_metadata_info(self):
         print('... wrong calling base function ...')
     
@@ -243,10 +223,13 @@ class ODataConverterFactory():
     
     def create_converter(self, endpoint, dir, resource, worker, worker_id):
         from .odata_converter_v2 import ODataConverterV2
+        from .odata_converter_v4 import ODataConverterV4
 
         if self._version == 'v2':
             return ODataConverterV2(endpoint, dir, resource, worker, worker_id)
+        elif self._version == 'v4':
+            return ODataConverterV4(endpoint, dir, resource, worker, worker_id)
         else:
-            print(f'[... only v2 is supported ...]')
+            print(f'[... only v2 and v4 are supported ...]')
             return None
 

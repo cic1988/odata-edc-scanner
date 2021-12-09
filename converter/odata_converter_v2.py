@@ -108,7 +108,7 @@ class ODataConverterV2(ODataConverter):
                     column['identity'] =  entityset['identity'] + '/' + prop.name
                     column['core.name'] = prop.name
                     column['core.description'] = prop.name
-                    column[self._model_property_datatype] = self._datatype[prop.typ.name] if self._datatype[prop.typ.name] else 'VARCHAR'
+                    column[self._model_property_datatype] = prop.typ.name
                     column[self._model_property_odataversion] = '2'
                     column[self._model_property_nullable] = getattr(prop, 'nullable', None)
                     column[self._model_property_maxlength] = getattr(prop, 'max_length', None)

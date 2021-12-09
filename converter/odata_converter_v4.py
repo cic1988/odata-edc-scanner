@@ -2,17 +2,17 @@
 
 from .odata_converter import ODataConverter
 from taskqueue.taskqueue import consumer, worker, get_taskqueue, get_consumerqueue
+from .odata.service import ODataService
 
-import requests
-import pyodata
-
-class ODataConverterV2(ODataConverter):
+class ODataConverterV4(ODataConverter):
     def __init__(self, endpoint, dir, resource, worker, worker_id=0):
         ODataConverter.__init__(self, endpoint, dir, resource, worker, worker_id)
-        self._session = requests.Session()
-        self._client = pyodata.Client(endpoint, self._session)
+        self._service = ODataService(endpoint, reflect_entities=True)
+        self._metadata_entities = None
 
     def print_out_metadata_info(self):
+
+        return
 
         for es in self._client.schema.entity_sets:
             print(es.name)
@@ -61,62 +61,52 @@ class ODataConverterV2(ODataConverter):
             endpoint['core.name'] = 'Endpoint'
             endpoint['core.description'] = 'Endpoint'
             endpoint[self._model_property_datatype] = 'URL'
-            endpoint[self._model_property_odataversion] = '2'
+            endpoint[self._model_property_odataversion] = '4'
 
             writer.writerow(endpoint)
 
-            for es in self._client.schema.entity_sets:
+            meta = self._service.metadata
+            document = meta.load_document()
+            schemas, entity_sets, actions, functions = meta.parse_document(document)
 
-                """ 2) entityset """
+            for schema in schemas:
+                for es in schema["entities"]:
 
-                entityset = copy.deepcopy(self._objects_head)
-                entityset['class'] = self._model_entityset
-                entityset['identity'] = endpoint['identity'] + '/' + es.name
-                entityset['core.name'] = es.name
-                entityset['core.description'] = es.name
-                entityset[self._model_entityset_entitytype] = es.entity_type.name
-                entityset[self._model_property_odataversion] = '2'
-                writer.writerow(entityset)
+                    """ 2) entityset """
 
-                """ 3) (primary) key """
+                    entityset = copy.deepcopy(self._objects_head)
+                    entityset['class'] = self._model_entityset
+                    entityset['identity'] = endpoint['identity'] + '/' + es["name"]
+                    entityset['core.name'] = es["name"]
+                    entityset['core.description'] = es["name"]
+                    entityset[self._model_entityset_entitytype] = es["name"]
+                    entityset[self._model_property_odataversion] = '4'
+                    writer.writerow(entityset)
 
-                proprties = es.entity_type.proprties()
+                    """ 3) properties """
 
-                for prop in es.entity_type.key_proprties:
-                    primarykey = copy.deepcopy(self._objects_head)
-                    primarykey['class'] = self._model_property
-                    primarykey['identity'] =  entityset['identity'] + '/' + prop.name
-                    primarykey['core.name'] = prop.name
-                    primarykey['core.description'] = prop.name
-                    primarykey[self._model_property_primarykey] = True
-                    primarykey[self._model_property_datatype] = prop.typ.name
-                    primarykey[self._model_property_odataversion] = '2'
-                    primarykey[self._model_property_nullable] = getattr(prop, 'nullable', None)
-                    primarykey[self._model_property_maxlength] = getattr(prop, 'max_length', None)
-                    primarykey[self._model_property_fixedlength] = getattr(prop, 'fixed_length', None)
-                    primarykey[self._model_property_precision] = None if getattr(prop, 'precision', None) == 0 else getattr(prop, 'precision', None)
-                    primarykey[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
+                    for prop in es["properties"]:
+                        column = copy.deepcopy(self._objects_head)
+                        column['class'] = self._model_property
+                        column['identity'] =  entityset['identity'] + '/' + prop["name"]
+                        column['core.name'] = prop["name"]
+                        column['core.description'] = prop["name"]
+                        column[self._model_property_datatype] = prop["type"]
+                        column[self._model_property_odataversion] = '4'
 
-                    writer.writerow(primarykey)
-                    proprties.remove(prop)
-                
-                """ 4) column """
+                        """
+                        TODO: these five attributes are currently not implemented in the odata_v4 module
+                        """
+                        column[self._model_property_nullable] = getattr(prop, 'nullable', None)
+                        column[self._model_property_maxlength] = getattr(prop, 'max_length', None)
+                        column[self._model_property_fixedlength] = getattr(prop, 'fixed_length', None)
+                        column[self._model_property_precision] = None if getattr(prop, 'precision', None) == 0 else getattr(prop, 'precision', None)
+                        column[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
 
-                for prop in proprties:
-                    column = copy.deepcopy(self._objects_head)
-                    column['class'] = self._model_property
-                    column['identity'] =  entityset['identity'] + '/' + prop.name
-                    column['core.name'] = prop.name
-                    column['core.description'] = prop.name
-                    column[self._model_property_datatype] = self._datatype[prop.typ.name] if self._datatype[prop.typ.name] else 'VARCHAR'
-                    column[self._model_property_odataversion] = '2'
-                    column[self._model_property_nullable] = getattr(prop, 'nullable', None)
-                    column[self._model_property_maxlength] = getattr(prop, 'max_length', None)
-                    column[self._model_property_fixedlength] = getattr(prop, 'fixed_length', None)
-                    column[self._model_property_precision] = None if getattr(prop, 'precision', None) == 0 else getattr(prop, 'precision', None)
-                    column[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
+                        if prop['is_primary_key']:
+                            column[self._model_property_primarykey] = True
 
-                    writer.writerow(column)
+                        writer.writerow(column)
 
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/objects.csv')
@@ -135,39 +125,32 @@ class ODataConverterV2(ODataConverter):
         with open(tmp_file, 'w', encoding='UTF8', newline='') as f:
              writer = csv.DictWriter(f, self._links_head.keys())
              writer.writeheader()
-
-             for es in self._client.schema.entity_sets:
+             
+             meta = self._service.metadata
+             document = meta.load_document()
+             schemas, entity_sets, actions, functions = meta.parse_document(document)
+             
+             for schema in schemas:
+                 for es in schema["entities"]:
     
-                """ 1) com.informatica.ldm.odata.endpointentityset """
-                endpointentityset = copy.deepcopy(self._links_head)
-                endpointentityset['association'] = self._association_endpointentityset
-                endpointentityset['fromObjectIdentity'] = 'Endpoint'
-                endpointentityset['toObjectIdentity'] = 'Endpoint/' + es.name
+                    """ 1) com.informatica.ldm.odata.endpointentityset """
 
-                writer.writerow(endpointentityset)
+                    endpointentityset = copy.deepcopy(self._links_head)
+                    endpointentityset['association'] = self._association_endpointentityset
+                    endpointentityset['fromObjectIdentity'] = 'Endpoint'
+                    endpointentityset['toObjectIdentity'] = 'Endpoint/' + es['name']
 
-                """ 2) com.informatica.ldm.odata.entitysetproperty (primarykey) """
+                    writer.writerow(endpointentityset)
 
-                proprties = es.entity_type.proprties()
+                    """ 2) com.informatica.ldm.odata.entitysetproperty """
 
-                for prop in es.entity_type.key_proprties:
-                    primarykeyproperty = copy.deepcopy(self._links_head)
-                    primarykeyproperty['association'] = self._association_entitysetproperty
-                    primarykeyproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    primarykeyproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop.name
+                    for prop in es["properties"]:
+                        entitysetproperty = copy.deepcopy(self._links_head)
+                        entitysetproperty['association'] = self._association_entitysetproperty
+                        entitysetproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
+                        entitysetproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop['name']
 
-                    writer.writerow(primarykeyproperty)
-                    proprties.remove(prop)
-                
-                """ 3) com.informatica.ldm.odata.entitysetproperty """
-
-                for prop in proprties:
-                    entitysetproperty = copy.deepcopy(self._links_head)
-                    entitysetproperty['association'] = self._association_entitysetproperty
-                    entitysetproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    entitysetproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop.name
-
-                    writer.writerow(entitysetproperty)
+                        writer.writerow(entitysetproperty)
         
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
