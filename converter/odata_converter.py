@@ -208,5 +208,45 @@ class ODataConverter():
     
     def prepare_dataset_mapping(self, obj):
         print(obj)
-        
+
+
+class ODataConverterFactory():
+    def __init__(self):
+        self._converter = None
+        self._root_url = None
+        self._version = None
+    
+    def version(self):
+        return self._version
+    
+    def prone(self, url):
+        """
+        ODATA Version:
+
+        1) for v4 there is obliged declaration in <edmx:Edmx /> 4.0 or 4.
+        2) for v2 and v3 there are no unified way
+
+        """
+
+        print(f'[... {self._version} is detected ...]')
+
+        return False
+    
+    def set_version(self, version):
+        """
+        when prone failed, manually setup the version...
+        """
+        if version == 'v2' or version == 'v3' or version == 'v4':
+            self._version = version
+        else:
+            print(f'[... invalid {version} given: only v2, v3 or v4 allowed ...]')
+    
+    def create_converter(self, endpoint, dir, resource, worker, worker_id):
+        from .odata_converter_v2 import ODataConverterV2
+
+        if self._version == 'v2':
+            return ODataConverterV2(endpoint, dir, resource, worker, worker_id)
+        else:
+            print(f'[... only v2 is supported ...]')
+            return None
 

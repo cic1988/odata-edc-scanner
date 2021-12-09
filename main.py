@@ -5,7 +5,7 @@ import sys
 from argparse import ArgumentParser
 from multiprocessing import Pool
 from configparser import ConfigParser
-from converter.odata_converter_v2 import ODataConverterV2
+from converter.odata_converter import ODataConverter, ODataConverterFactory
 
 def execute(args):
     """ read initial setup from ini firstly """
@@ -41,7 +41,9 @@ def execute(args):
     print(f'[... OVERWRITTEN: {args.force} ...]')
     print(f'[... VERBOSE: {args.verbose} ...]')
 
-    converter = ODataConverterV2(root_url, dir, resource, worker, args.asworker_id)
+    factory = ODataConverterFactory()
+    factory.set_version('v2')
+    converter = factory.create_converter(root_url, dir, resource, worker, args.asworker_id)
     converter.set_profiling_lines(profiling_lines)
 
     if args.asworker:
