@@ -1,5 +1,9 @@
+import logging
+
 from configparser import ConfigParser
 from hotqueue import HotQueue
+
+logger = logging.getLogger(__name__)
 
 def get_taskqueue(name):
     import os
@@ -15,6 +19,7 @@ def get_taskqueue(name):
     pathname = dbfilename
 
     if not os.path.exists(os.path.dirname(pathname)):
+        logger.info(f'[... CREATE : {dbfilename} ...]')
         os.makedirs(os.path.dirname(pathname))
 
     return HotQueue(queuename, dbfilename=pathname)

@@ -5,6 +5,9 @@ from taskqueue.taskqueue import consumer, worker, get_taskqueue, get_consumerque
 
 import requests
 import pyodata
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ODataConverterV2(ODataConverter):
     def __init__(self, endpoint, dir, resource, worker, worker_id=0):
@@ -15,28 +18,28 @@ class ODataConverterV2(ODataConverter):
     def print_out_metadata_info(self):
 
         for es in self._client.schema.entity_sets:
-            print(es.name)
+            logger.debug(es.name)
 
             proprties = es.entity_type.proprties()
 
             for prop in es.entity_type.key_proprties:
-                print(f' K {prop.name}({prop.typ.name})')
+                logger.debug(f' K {prop.name}({prop.typ.name})')
                 proprties.remove(prop)
 
             for prop in proprties:
-                print(f' + {prop.name}({prop.typ.name})')
+                logger.debug(f' + {prop.name}({prop.typ.name})')
 
             for prop in es.entity_type.nav_proprties:
-                print(f' + {prop.name}({prop.to_role.entity_type_name})')
+                logger.debug(f' + {prop.name}({prop.to_role.entity_type_name})')
 
         for fs in self._client.schema.function_imports:
-            print(f'{fs.http_method} {fs.name}')
+            logger.debug(f'{fs.http_method} {fs.name}')
 
             for param in fs.parameters:
-                print(f' > {param.name}({param.typ.name})')
+                logger.debug(f' > {param.name}({param.typ.name})')
 
             if fs.return_type is not None:
-                print(f' < {fs.return_type.name}')
+                logger.debug(f' < {fs.return_type.name}')
 
     def convert_objects(self, force=False):
         super().convert_objects(force)

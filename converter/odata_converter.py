@@ -1,6 +1,15 @@
-""" OData Interface """
-""" V2 implemented via https://github.com/SAP/python-pyodata """
-""" TODO: V4 open """
+"""
+OData Interface
+
+V2 implemented via https://github.com/SAP/python-pyodata
+V4 implemented via https://github.com/tuomur/python-odata
+
+TODO: v3
+"""
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ODataConverter():
     def __init__(self, endpoint, dir, resource, worker, worker_id=0):
@@ -39,7 +48,7 @@ class ODataConverter():
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
 
     def print_out_metadata_info(self):
-        print('... wrong calling base function ...')
+        logger.info('... wrong calling base function ...')
     
     def convert_objects(self, force=False):
         """ create objects.csv """
@@ -92,7 +101,7 @@ class ODataConverter():
         self._profling_lines = lines
 
     def fetch_pdata(self, force=False):
-        print('... wrongly calling base function ...')
+        logger.info('... wrongly calling base function ...')
     
     def invoke_worker(self):
         from multiprocessing import Process
@@ -114,14 +123,14 @@ class ODataConverter():
             for future in futures:
                 pass
             end = time.time()
-            print(f'[... PROFILING FINISHED IN {end-start} SECONDS ...]')
+            logger.info(f'[... PROFILING FINISHED IN {end-start} SECONDS ...]')
 
             import os
             import csv
 
             if os.path.exists(self._dir):
                 with open(self._dir + f'/{self._resource}_DatasetMapping.csv', 'w') as f:
-                    print(f'[... CREATETING {self._dir}/{self._resource}_DatasetMapping.csv ...]')
+                    logger.info(f'[... CREATETING {self._dir}/{self._resource}_DatasetMapping.csv ...]')
                     writer = csv.writer(f, delimiter=',')
                     writer.writerow(['DatasetId','AssociationType','DataTypeAttribute','DatasetFilePath'])
                     f.close()
@@ -130,7 +139,7 @@ class ODataConverter():
 
     def profile(self, esname):
         import os
-        print(f'[... (WORKER {self._workerid} - PID {os.getpid()}) START PROFILING JOB: {esname}]')
+        logger.info(f'[... (WORKER {self._workerid} - PID {os.getpid()}) START PROFILING JOB: {esname}]')
     
     def create_profiling_constant_files(self, resource, force):
 
@@ -172,7 +181,7 @@ class ODataConverter():
             """ create or overwrite ProfileableClassTypes.csv """
             
             with open(self._dir + '/ProfileableClassTypes.csv', 'w') as f:
-                print(f'[... CREATETING {self._dir}/ProfileableClassTypes.csv ...]')
+                logger.info(f'[... CREATETING {self._dir}/ProfileableClassTypes.csv ...]')
 
                 """
                 TODO: seems a bug in EDC.
@@ -184,10 +193,10 @@ class ODataConverter():
                 f.close()
 
         else:
-            print('[... NO DIR FOR PROFILING IS GIVEN...]')
+            logger.info('[... NO DIR FOR PROFILING IS GIVEN...]')
     
     def prepare_dataset_mapping(self, obj):
-        print(obj)
+        logger.info(obj)
 
 
 class ODataConverterFactory():
@@ -208,7 +217,7 @@ class ODataConverterFactory():
 
         """
 
-        print(f'[... {self._version} is detected ...]')
+        logger.info(f'[... {self._version} is detected ...]')
 
         return False
     
@@ -219,7 +228,7 @@ class ODataConverterFactory():
         if version == 'v2' or version == 'v3' or version == 'v4':
             self._version = version
         else:
-            print(f'[... invalid {version} given: only v2, v3 or v4 allowed ...]')
+            logger.info(f'[... invalid {version} given: only v2, v3 or v4 allowed ...]')
     
     def create_converter(self, endpoint, dir, resource, worker, worker_id):
         from .odata_converter_v2 import ODataConverterV2
@@ -230,6 +239,6 @@ class ODataConverterFactory():
         elif self._version == 'v4':
             return ODataConverterV4(endpoint, dir, resource, worker, worker_id)
         else:
-            print(f'[... only v2 and v4 are supported ...]')
+            logger.info('[... only v2 and v4 are supported ...]')
             return None
 

@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
 import sys
+import logging
 
 from argparse import ArgumentParser
 from multiprocessing import Pool
 from configparser import ConfigParser
 from converter.odata_converter import ODataConverter, ODataConverterFactory
+
+logger = logging.getLogger(__name__)
 
 def execute(args):
     """ read initial setup from ini firstly """
@@ -17,6 +20,7 @@ def execute(args):
 
     cp = ConfigParser()
     cp.read(pathname + '/config.ini')
+
     root_url = cp.get('local', 'root_url')
     odata_version = cp.get('local', 'odata_version')
     dir = cp.get('local', 'dir')
@@ -30,18 +34,17 @@ def execute(args):
     resource = resource if not args.resource else resource
 
     """ a bit verbose """
-
-    print('[... START SCANNING ...]')
-    print(f'[... ROOT_URL: {root_url} ...]')
-    print(f'[... ODATA_VERSION: {odata_version} ...]')
-    print(f'[... DIR: {dir} ...]')
-    print(f'[... RESORUCE NAME: {resource} ...]')
-    print(f'[... PROFILING LINES: {profiling_lines} ...]')
-    print(f'[... NUMBER OF WORKERS: {worker} ...]')
-    print(f'[... AS WORKER: {args.asworker} ...]')
-    print(f'[... AS CONSUMER: {args.asconsumer} ...]')
-    print(f'[... OVERWRITTEN: {args.force} ...]')
-    print(f'[... VERBOSE: {args.verbose} ...]')
+    logger.info('[... START SCANNING ...]')
+    logger.info(f'[... ROOT_URL: {root_url} ...]')
+    logger.info(f'[... ODATA_VERSION: {odata_version} ...]')
+    logger.info(f'[... DIR: {dir} ...]')
+    logger.info(f'[... RESORUCE NAME: {resource} ...]')
+    logger.info(f'[... PROFILING LINES: {profiling_lines} ...]')
+    logger.info(f'[... NUMBER OF WORKERS: {worker} ...]')
+    logger.info(f'[... AS WORKER: {args.asworker} ...]')
+    logger.info(f'[... AS CONSUMER: {args.asconsumer} ...]')
+    logger.info(f'[... OVERWRITTEN: {args.force} ...]')
+    logger.info(f'[... VERBOSE: {args.verbose} ...]')
 
     factory = ODataConverterFactory()
     factory.set_version(odata_version)
@@ -49,16 +52,17 @@ def execute(args):
     converter.set_profiling_lines(profiling_lines)
 
     if args.asworker:
-        print('[... WORKER START ...]')
+        logger.info('[... WORKER START ...]')
         converter.profile()
         return
     
     if args.asconsumer:
-        print('[... CONSUMER START ...]')
+        logger.info('[... CONSUMER START ...]')
         converter.prepare_dataset_mapping()
         return
 
     if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
         converter.print_out_metadata_info()
 
     converter.convert_objects(args.force)
@@ -89,9 +93,9 @@ def _main(argv):
     args.func(args)
 
     if args.asworker:
-        print(f'[... WORKER {args.asworker_id} DONE ...]')
+        logger.info(f'[... WORKER {args.asworker_id} DONE ...]')
     else:
-        print(f'[... MAIN DONE ...]')
+        logger.info(f'[... MAIN DONE ...]')
 
     return 0
 
@@ -103,5 +107,10 @@ if __name__ == '__main__':
     """
     import multiprocessing
     multiprocessing.freeze_support()
+
+    """
+    logging
+    """
+    logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)
     sys.exit(_main(sys.argv))
 
