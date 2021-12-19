@@ -70,16 +70,16 @@ class ODataConverterV2(ODataConverter):
 
             for es in self._client.schema.entity_sets:
 
-                """ 2) entityset """
+                """ 2) entitytype """
 
-                entityset = copy.deepcopy(self._objects_head)
-                entityset['class'] = self._model_entityset
-                entityset['identity'] = endpoint['identity'] + '/' + es.name
-                entityset['core.name'] = es.name
-                entityset['core.description'] = es.name
-                entityset[self._model_entityset_entitytype] = es.entity_type.name
-                entityset[self._model_property_odataversion] = '2'
-                writer.writerow(entityset)
+                entitytype = copy.deepcopy(self._objects_head)
+                entitytype['class'] = self._model_entitytype
+                entitytype['identity'] = endpoint['identity'] + '/' + es.entity_type.name
+                entitytype['core.name'] = es.entity_type.name
+                entitytype['core.description'] = es.entity_type.name
+                entitytype[self._model_entityset_entitytype] = es.entity_type.name
+                entitytype[self._model_property_odataversion] = '2'
+                writer.writerow(entitytype)
 
                 """ 3) (primary) key """
 
@@ -88,7 +88,7 @@ class ODataConverterV2(ODataConverter):
                 for prop in es.entity_type.key_proprties:
                     primarykey = copy.deepcopy(self._objects_head)
                     primarykey['class'] = self._model_property
-                    primarykey['identity'] =  entityset['identity'] + '/' + prop.name
+                    primarykey['identity'] =  entitytype['identity'] + '/' + prop.name
                     primarykey['core.name'] = prop.name
                     primarykey['core.description'] = prop.name
                     primarykey[self._model_property_primarykey] = True
@@ -108,7 +108,7 @@ class ODataConverterV2(ODataConverter):
                 for prop in proprties:
                     column = copy.deepcopy(self._objects_head)
                     column['class'] = self._model_property
-                    column['identity'] =  entityset['identity'] + '/' + prop.name
+                    column['identity'] =  entitytype['identity'] + '/' + prop.name
                     column['core.name'] = prop.name
                     column['core.description'] = prop.name
                     column[self._model_property_datatype] = prop.typ.name
@@ -141,23 +141,23 @@ class ODataConverterV2(ODataConverter):
 
              for es in self._client.schema.entity_sets:
     
-                """ 1) com.informatica.ldm.odata.endpointentityset """
-                endpointentityset = copy.deepcopy(self._links_head)
-                endpointentityset['association'] = self._association_endpointentityset
-                endpointentityset['fromObjectIdentity'] = 'Endpoint'
-                endpointentityset['toObjectIdentity'] = 'Endpoint/' + es.name
+                """ 1) com.informatica.ldm.odata.endpointentitytype """
+                endpointentitytype = copy.deepcopy(self._links_head)
+                endpointentitytype['association'] = self._association_entitysetproperty
+                endpointentitytype['fromObjectIdentity'] = 'Endpoint'
+                endpointentitytype['toObjectIdentity'] = 'Endpoint/' + es.entity_type.name
 
-                writer.writerow(endpointentityset)
+                writer.writerow(endpointentitytype)
 
-                """ 2) com.informatica.ldm.odata.entitysetproperty (primarykey) """
+                """ 2) com.informatica.ldm.odata.entitytypeproperty (primarykey) """
 
                 proprties = es.entity_type.proprties()
 
                 for prop in es.entity_type.key_proprties:
                     primarykeyproperty = copy.deepcopy(self._links_head)
-                    primarykeyproperty['association'] = self._association_entitysetproperty
-                    primarykeyproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    primarykeyproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop.name
+                    primarykeyproperty['association'] = self._association_entitytypeproperty
+                    primarykeyproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    primarykeyproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(primarykeyproperty)
                     proprties.remove(prop)
@@ -166,9 +166,9 @@ class ODataConverterV2(ODataConverter):
 
                 for prop in proprties:
                     entitysetproperty = copy.deepcopy(self._links_head)
-                    entitysetproperty['association'] = self._association_entitysetproperty
-                    entitysetproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    entitysetproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop.name
+                    entitysetproperty['association'] = self._association_entitytypeproperty
+                    entitysetproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitysetproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(entitysetproperty)
         
@@ -193,10 +193,12 @@ class ODataConverterV2(ODataConverter):
         if esname:
             super().profile(esname)
             entities = self._client.entity_sets._entity_sets[esname].get_entities().top(self._profling_lines).execute()
+            et = None
 
             """ only profile when entities """
             if entities:
                 entity = entities[0]
+                et = entity._entity_type.name
                 proprties = entity._entity_type.proprties()
 
                 header = []
@@ -220,10 +222,12 @@ class ODataConverterV2(ODataConverter):
                             writer.writerow(row)
             
             """ put dataset identifier into consumer queue """
-            get_consumerqueue('profiling').put({
-                'id': 'Endpoint/' + esname,
-                'file': self._dir + '/' + esname + '.csv'
-            })
+
+            if et:
+                get_consumerqueue('profiling').put({
+                    'id': 'Endpoint/' + et,
+                    'file': self._dir + '/' + esname + '.csv'
+                })
     
     @consumer('profiling', timeout=5)
     def prepare_dataset_mapping(self, obj):
