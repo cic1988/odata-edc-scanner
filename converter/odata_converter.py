@@ -46,9 +46,16 @@ class ODataConverter():
         self._model_property_scale = 'com.infa.ldm.relational.DatatypeScale'
 
         """ 3) association """
+        self._association_resourceparanchild = 'core.ResourceParentChild'
         self._association_endpointentityset = 'com.informatica.ldm.odata.endpointentityset'
         self._association_entitytypeproperty = 'com.informatica.ldm.odata.entitytypeproperty'
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
+
+        """ 4) lineage (within the data source) """
+        self._association_datasourcedataflow = 'core.DataSourceDataFlow'
+        self._association_datasetdataflow = 'core.DataSetDataFlow'
+        self._association_directionaldataflow = 'core.DirectionalDataFlow'
+
 
     def print_out_metadata_info(self):
         logger.info('... wrong calling base function ...')

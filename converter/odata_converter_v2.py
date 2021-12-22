@@ -158,6 +158,13 @@ class ODataConverterV2(ODataConverter):
              writer.writeheader()
 
              for es in self._client.schema.entity_sets:
+
+                """ 0) endpoint to entitytype """
+                toplevel = copy.deepcopy(self._links_head)
+                toplevel['association'] = self._association_resourceparanchild
+                toplevel['toObjectIdentity'] = 'Endpoint/' + es.entity_type.name
+
+                writer.writerow(toplevel)
     
                 """ 1) com.informatica.ldm.odata.endpointentitytype """
                 endpointentitytype = copy.deepcopy(self._links_head)
@@ -199,6 +206,37 @@ class ODataConverterV2(ODataConverter):
                     entitytynavigationpeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(entitytynavigationpeproperty)
+            
+             """ lineage """
+
+             for association in self._client.schema.associations:
+                 if association.referential_constraint:
+                     
+                     """ 5) core.DataSetDataFlow """
+
+                     entitytype_from = next((role.entity_type.name for role in association.end_roles
+                                if role.role == association.referential_constraint.principal.name), None)
+
+                     entitytype_to = next((role.entity_type.name for role in association.end_roles
+                                if role.role == association.referential_constraint.dependent.name), None)
+                     
+                     entitytypefromto = copy.deepcopy(self._links_head)
+                     entitytypefromto['association'] = self._association_datasetdataflow
+                     entitytypefromto['fromObjectIdentity'] = 'Endpoint/' + entitytype_from
+                     entitytypefromto['toObjectIdentity'] = 'Endpoint/' + entitytype_to
+
+                     writer.writerow(entitytypefromto)
+
+                     """ 5) core.DirectionalDataFlow """
+
+                     for prop_from in association.referential_constraint.principal.property_names:
+                        for prop_to in association.referential_constraint.dependent.property_names:
+                            propertyfromto = copy.deepcopy(self._links_head)
+                            propertyfromto['association'] = self._association_directionaldataflow
+                            propertyfromto['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop_from
+                            propertyfromto['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop_to
+
+                            writer.writerow(propertyfromto)
         
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
