@@ -305,6 +305,6 @@ class ODataConverterV2(ODataConverter):
                 writer = csv.writer(f, delimiter=',')
                 writer.writerow([
                     obj['id'],
-                    self._association_entitysetproperty,
+                    self._association_entitytypeproperty,
                     self._model_property_datatype,
                     os.path.abspath(obj['file'])])
