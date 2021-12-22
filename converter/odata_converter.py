@@ -30,7 +30,9 @@ class ODataConverter():
         self._model_endpoint = 'com.informatica.ldm.odata.endpoint'
         self._model_entitytype = 'com.informatica.ldm.odata.entitytype'
         self._model_entityset = 'com.informatica.ldm.odata.entityset'
+        self._model_key = 'com.informatica.ldm.odata.key'
         self._model_property = 'com.informatica.ldm.odata.property'
+        self._model_navigationproperty = 'com.informatica.ldm.odata.navigationproperty'
 
         """ 2) attribute """
         self._model_entityset_entitytype = 'com.informatica.ldm.odata.ENTITYTYPE'

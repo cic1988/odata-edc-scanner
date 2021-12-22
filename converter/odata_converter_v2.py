@@ -87,7 +87,7 @@ class ODataConverterV2(ODataConverter):
 
                 for prop in es.entity_type.key_proprties:
                     primarykey = copy.deepcopy(self._objects_head)
-                    primarykey['class'] = self._model_property
+                    primarykey['class'] = self._model_key
                     primarykey['identity'] =  entitytype['identity'] + '/' + prop.name
                     primarykey['core.name'] = prop.name
                     primarykey['core.description'] = prop.name
@@ -120,6 +120,24 @@ class ODataConverterV2(ODataConverter):
                     column[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
 
                     writer.writerow(column)
+                
+                """ 5) navigation property """
+                for prop in es.entity_type.nav_proprties:
+                    navigation = copy.deepcopy(self._objects_head)
+                    navigation['class'] = self._model_navigationproperty
+                    navigation['identity'] =  entitytype['identity'] + '/' + prop.name
+                    navigation['core.name'] = prop.name
+                    navigation['core.description'] = prop.name
+                    navigation[self._model_property_datatype] = prop.typ.name
+                    navigation[self._model_property_odataversion] = '2'
+                    navigation[self._model_property_nullable] = getattr(prop, 'nullable', None)
+                    navigation[self._model_property_maxlength] = getattr(prop, 'max_length', None)
+                    navigation[self._model_property_fixedlength] = getattr(prop, 'fixed_length', None)
+                    navigation[self._model_property_precision] = None if getattr(prop, 'precision', None) == 0 else getattr(prop, 'precision', None)
+                    navigation[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
+
+                    writer.writerow(navigation)
+
 
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/objects.csv')
@@ -154,23 +172,33 @@ class ODataConverterV2(ODataConverter):
                 proprties = es.entity_type.proprties()
 
                 for prop in es.entity_type.key_proprties:
-                    primarykeyproperty = copy.deepcopy(self._links_head)
-                    primarykeyproperty['association'] = self._association_entitytypeproperty
-                    primarykeyproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
-                    primarykeyproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
+                    entitytypeproperty = copy.deepcopy(self._links_head)
+                    entitytypeproperty['association'] = self._association_entitytypeproperty
+                    entitytypeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitytypeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
-                    writer.writerow(primarykeyproperty)
+                    writer.writerow(entitytypeproperty)
                     proprties.remove(prop)
                 
-                """ 3) com.informatica.ldm.odata.entitysetproperty """
+                """ 3) com.informatica.ldm.odata.entitytypeproperty """
 
                 for prop in proprties:
-                    entitysetproperty = copy.deepcopy(self._links_head)
-                    entitysetproperty['association'] = self._association_entitytypeproperty
-                    entitysetproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
-                    entitysetproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
+                    entitytypeproperty = copy.deepcopy(self._links_head)
+                    entitytypeproperty['association'] = self._association_entitytypeproperty
+                    entitytypeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitytypeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
-                    writer.writerow(entitysetproperty)
+                    writer.writerow(entitytypeproperty)
+                
+                """ 4) com.informatica.ldm.odata.entitytynavigationpeproperty """
+
+                for prop in es.entity_type.nav_proprties:
+                    entitytynavigationpeproperty = copy.deepcopy(self._links_head)
+                    entitytynavigationpeproperty['association'] = self._association_entitytypeproperty
+                    entitytynavigationpeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitytynavigationpeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
+
+                    writer.writerow(entitytynavigationpeproperty)
         
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
