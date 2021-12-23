@@ -1,6 +1,16 @@
 # Project: odata-edc-scanner
 Odata scanner for EDC
 
+# Overview
+* Objects (v2 only)
+  * :white_check_mark: entity type
+  * :white_check_mark: key
+  * :white_check_mark: property
+  * :white_check_mark: navigation property
+  * :construction: association + navigation property
+  * :soon: function import
+  * :soon: custom attributes
+
 
 # Usage
 1. Clone this repository via `git clone https://github.com/cic1988/odata-edc-scanner.git`
