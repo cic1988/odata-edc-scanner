@@ -2,6 +2,8 @@
 Odata scanner for EDC
 
 # Overview
+:white_check_mark: (supported) :construction: (on-going) :soon: (plan)
+
 * Objects (v2 only)
   * :white_check_mark: entity type
   * :white_check_mark: key
