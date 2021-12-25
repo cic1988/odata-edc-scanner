@@ -206,37 +206,80 @@ class ODataConverterV2(ODataConverter):
                     entitytynavigationpeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(entitytynavigationpeproperty)
-            
-             """ lineage """
 
-             for association in self._client.schema.associations:
-                 if association.referential_constraint:
-                     
-                     """ 5) core.DataSetDataFlow """
+                    """ lineage """
 
-                     entitytype_from = next((role.entity_type.name for role in association.end_roles
-                                if role.role == association.referential_constraint.principal.name), None)
+                    if prop.association:
 
-                     entitytype_to = next((role.entity_type.name for role in association.end_roles
-                                if role.role == association.referential_constraint.dependent.name), None)
-                     
-                     entitytypefromto = copy.deepcopy(self._links_head)
-                     entitytypefromto['association'] = self._association_datasetdataflow
-                     entitytypefromto['fromObjectIdentity'] = 'Endpoint/' + entitytype_from
-                     entitytypefromto['toObjectIdentity'] = 'Endpoint/' + entitytype_to
+                        """
+                        TODO: the order shows the data flow direction:
 
-                     writer.writerow(entitytypefromto)
+                        Employee -> Territory
 
-                     """ 5) core.DirectionalDataFlow """
+                        <Association Name="EmployeeTerritories">
+                            <End Role="Employees" Type="NorthwindModel.Employee" Multiplicity="*"/>
+                            <End Role="Territories" Type="NorthwindModel.Territory" Multiplicity="*"/>
+                        </Association>
 
-                     for prop_from in association.referential_constraint.principal.property_names:
-                        for prop_to in association.referential_constraint.dependent.property_names:
-                            propertyfromto = copy.deepcopy(self._links_head)
-                            propertyfromto['association'] = self._association_directionaldataflow
-                            propertyfromto['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop_from
-                            propertyfromto['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop_to
+                        """
+                        if len(prop.association.end_roles) != 2:
+                            continue
+                        
+                        entitytype_from = prop.association.end_roles[0].entity_type.name
+                        entitytype_to = prop.association.end_roles[1].entity_type.name
 
-                            writer.writerow(propertyfromto)
+                        """ 5) core.DataSetDataFlow """
+                        
+                        entitytypefromto = copy.deepcopy(self._links_head)
+                        entitytypefromto['association'] = self._association_datasetdataflow
+                        entitytypefromto['fromObjectIdentity'] = 'Endpoint/' + entitytype_from
+                        entitytypefromto['toObjectIdentity'] = 'Endpoint/' + entitytype_to
+
+                        writer.writerow(entitytypefromto)
+
+                        if prop.association.referential_constraint:
+
+                            """ 6) core.DirectionalDataFlow (property -> property) """
+
+                            for prop_from in prop.association.referential_constraint.principal.property_names:
+                                for prop_to in prop.association.referential_constraint.dependent.property_names:
+                                    propertyfromto = copy.deepcopy(self._links_head)
+                                    propertyfromto['association'] = self._association_directionaldataflow
+                                    propertyfromto['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop_from
+                                    propertyfromto['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop_to
+
+                                    writer.writerow(propertyfromto)
+                        else:
+
+                            """ 6) core.DirectionalDataFlow (navigationproperty -> navigationproperty) """
+
+                            navigationpropertyentitytype = copy.deepcopy(self._links_head)
+                            navigationpropertyentitytype['association'] = self._association_directionaldataflow
+
+                            navigation2propertyentitytype = entitytype_to if es.entity_type == entitytype_from else entitytype_from
+
+                            for es in self._client.schema.entity_sets:
+                                if es.entity_type.name == navigation2propertyentitytype:
+                                    navigation2propertyentitytype = es.entity_type
+                                    break
+
+                            navigation2property = None
+                            
+                            for navigation2property_i in navigation2propertyentitytype.nav_proprties:
+                                if navigation2property_i.association.name == prop.association.name:
+                                    navigation2property = navigation2property_i
+                            
+                            if navigation2property:
+
+                                if es.entity_type == entitytype_from:
+                                    navigationpropertyentitytype['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop.name
+                                    navigationpropertyentitytype['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + navigation2property.name
+                                else:
+                                    navigationpropertyentitytype['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + navigation2property.name
+                                    navigationpropertyentitytype['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop.name
+
+                                writer.writerow(navigationpropertyentitytype)
+
         
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
