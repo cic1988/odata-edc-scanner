@@ -30,8 +30,9 @@ Odata scanner for EDC
 2. `cd odata-edc-scanner`
 3. `python3 -m venv . `
 4. `source bin/activate`
-5. `pip install -r requirements.txt`
-6. `cp config.ini.sample config.ini`
-7. Edit the config.ini with required information (see comment in the file)
-8. `chmod u+x main.py`
-9. `./main.py -f`
+5. `pip install --upgrade pip`
+6. `pip install -r requirements.txt`
+7. `cp config.ini.sample config.ini`
+8. Edit the config.ini with required information (see comment in the file)
+9. `chmod u+x main.py`
+10. `./main.py -f`
