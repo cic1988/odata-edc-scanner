@@ -19,10 +19,11 @@ Odata scanner for EDC
   * profiling (configurable) + data domain discovery
  
 * Screenshot (example of https://services.odata.org/V2/Northwind/Northwind.svc)
- 
-![image](https://user-images.githubusercontent.com/7901026/147205262-58637155-00c9-41bf-ad11-818fd2b3a7ff.png)
-![image](https://user-images.githubusercontent.com/7901026/147205341-829e5e96-c531-4e95-b54b-67c4eac0e8e9.png)
-![image](https://user-images.githubusercontent.com/7901026/147205890-27703e97-e0a8-440d-90a4-80b819c67789.png)
+
+| Screenshot 1 | Screenshot 2 |
+| ------------- | ------------- |
+| ![image](https://user-images.githubusercontent.com/7901026/147205262-58637155-00c9-41bf-ad11-818fd2b3a7ff.png)  | ![image](https://user-images.githubusercontent.com/7901026/147205341-829e5e96-c531-4e95-b54b-67c4eac0e8e9.png)  |
+| ![image](https://user-images.githubusercontent.com/7901026/147205890-27703e97-e0a8-440d-90a4-80b819c67789.png)  |   |
 
 
 # Usage
