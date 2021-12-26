@@ -13,6 +13,8 @@ Odata scanner for EDC
   * :soon: function import
   * :soon: custom attributes
 
+* V3 Objects :soon:
+
 * V4 Objects :construction: (see v4 branch)
   * :white_check_mark: entity type
   * :white_check_mark: key
@@ -23,9 +25,9 @@ Odata scanner for EDC
   * :soon: custom attriburtes
 
 * Feature
-  * metadata
-  * lineage
-  * profiling (configurable) + data domain discovery
+  * :white_check_mark: metadata
+  * :white_check_mark: lineage
+  * :white_check_mark: profiling (configurable) + data domain discovery
  
 * Screenshot (example of https://services.odata.org/V2/Northwind/Northwind.svc)
 
