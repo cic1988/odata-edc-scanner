@@ -4,7 +4,7 @@ Odata scanner for EDC
 # Overview
 :white_check_mark: (supported) :construction: (on-going) :soon: (plan)
 
-* V2 Objects :construction (see v2 branch)
+* V2 Objects :construction: (see v2 branch)
   * :white_check_mark: entity type
   * :white_check_mark: key
   * :white_check_mark: property
@@ -13,7 +13,7 @@ Odata scanner for EDC
   * :soon: function import
   * :soon: custom attributes
 
-* V4 Objects :construction (see v4 branch)
+* V4 Objects :construction: (see v4 branch)
   * :white_check_mark: entity type
   * :white_check_mark: key
   * :white_check_mark: property
