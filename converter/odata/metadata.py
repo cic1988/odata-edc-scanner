@@ -425,6 +425,9 @@ class MetaData(object):
                 return node.findall(xpath, namespaces=self.namespaces)
 
         for schema in xmlq(doc, 'edmx:DataServices/edm:Schema'):
+            if not schema.get('Namespace', default=None):
+                continue
+
             schema_name = schema.attrib['Namespace']
             schema_alias = schema.attrib.get('Alias')
 
@@ -447,6 +450,9 @@ class MetaData(object):
             schemas.append(schema_dict)
 
         for schema in xmlq(doc, 'edmx:DataServices/edm:Schema'):
+            if not schema.get('Namespace', default=None):
+                continue
+
             schema_name = schema.attrib['Namespace']
             for entity_set in xmlq(schema, 'edm:EntityContainer/edm:EntitySet'):
                 set_name = entity_set.attrib['Name']
