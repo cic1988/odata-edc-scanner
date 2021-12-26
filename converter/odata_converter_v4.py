@@ -131,6 +131,7 @@ class ODataConverterV4(ODataConverter):
         import uuid
         import os
         import copy
+        import re
 
         tmp_file = os.path.abspath(self._dir) + '/links.csv.' + uuid.uuid4().hex.upper()[0:6]
 
@@ -161,18 +162,34 @@ class ODataConverterV4(ODataConverter):
                 properties = es['schema']['properties']
 
                 for prop in properties:
-                    entitysetproperty = copy.deepcopy(self._links_head)
-                    entitysetproperty['association'] = self._association_entitytypeproperty
-                    entitysetproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
-                    entitysetproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop['name']
+                    entitytypeproperty = copy.deepcopy(self._links_head)
+                    entitytypeproperty['association'] = self._association_entitytypeproperty
+                    entitytypeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitytypeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop['name']
 
-                    """ 4) key """
+                    """ 3) key """
 
                     if prop['is_primary_key']:
-                        column['class'] = self._model_key
-                        column[self._model_property_primarykey] = True
+                        entitytypeproperty['association'] = self._association_entitytypekey
 
-                    writer.writerow(entitysetproperty)
+                    writer.writerow(entitytypeproperty)
+                
+                """ 4) com.informatica.ldm.odata.entitytypenavigationproperty """
+
+                navigation_properties = es['schema']['navigation_properties']
+
+                for prop in navigation_properties:
+                    res = re.search(f"Collection\({self._modelname}.([a-zA-Z0-9]+)\)", prop["type"])
+
+                    if not res:
+                        continue
+
+                    entitytypenavigationproperty = copy.deepcopy(self._links_head)
+                    entitytypenavigationproperty['association'] = self._association_entitytypenavigationproperty
+                    entitytypenavigationproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitytypenavigationproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop['name']
+
+                    writer.writerow(entitytypenavigationproperty)
         
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/links.csv')
@@ -196,6 +213,7 @@ class ODataConverterV4(ODataConverter):
             super().profile(esname)
             query = self._service.query(self._service.entities[esname])
             entities = query.limit(self._profling_lines)
+            entitytype_name = self._entities[esname]['type'].replace(self._modelname + '.', "") 
 
             """ only profile when entities """
 
@@ -223,7 +241,7 @@ class ODataConverterV4(ODataConverter):
             
             """ put dataset identifier into consumer queue """
             get_consumerqueue('profiling').put({
-                'id': 'Endpoint/' + esname,
+                'id': 'Endpoint/' + entitytype_name,
                 'file': self._dir + '/' + esname + '.csv'
             })
     
@@ -237,6 +255,6 @@ class ODataConverterV4(ODataConverter):
                 writer = csv.writer(f, delimiter=',')
                 writer.writerow([
                     obj['id'],
-                    self._association_entitysetproperty,
+                    self._association_entitytypeproperty,
                     self._model_property_datatype,
                     os.path.abspath(obj['file'])])
