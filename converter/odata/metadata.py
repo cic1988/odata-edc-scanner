@@ -41,7 +41,10 @@ class MetaData(object):
     _annotation_term_computed = 'Org.OData.Core.V1.Computed'
 
     def __init__(self, service):
-        self.url = service.url + '/$metadata'
+        if service.url.endswith('/'):
+            self.url = service.url + '$metadata'
+        else:
+            self.url = service.url + '/$metadata'
         self.connection = service.default_context.connection
         self.service = service
 
