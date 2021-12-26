@@ -17,6 +17,7 @@ class ODataConverterV4(ODataConverter):
         document = meta.load_document()
         schemas, entity_sets, actions, functions = meta.parse_document(document)
         self._entities = entity_sets
+        self._modelname = schemas[0]['name']
 
     def print_out_metadata_info(self):
 
@@ -34,6 +35,7 @@ class ODataConverterV4(ODataConverter):
         import uuid
         import os
         import copy
+        import re
 
         tmp_file = os.path.abspath(self._dir) + '/objects.csv.' + uuid.uuid4().hex.upper()[0:6]
 
@@ -53,27 +55,29 @@ class ODataConverterV4(ODataConverter):
 
             writer.writerow(endpoint)
 
-            for es in self._entities:
+            for es in self._entities.values():
 
-                """ 2) entityset """
+                entitytype_name = es['type'].replace(self._modelname + '.', "") 
 
-                entityset = copy.deepcopy(self._objects_head)
-                entityset['class'] = self._model_entityset
-                entityset['identity'] = endpoint['identity'] + '/' + es
-                entityset['core.name'] = es
-                entityset['core.description'] = es
-                entityset[self._model_entityset_entitytype] = es
-                entityset[self._model_property_odataversion] = '4'
-                writer.writerow(entityset)
+                """ 2) entitytype """
+
+                entitytype = copy.deepcopy(self._objects_head)
+                entitytype['class'] = self._model_entitytype
+                entitytype['identity'] = endpoint['identity'] + '/' + entitytype_name
+                entitytype['core.name'] = entitytype_name
+                entitytype['core.description'] = entitytype_name
+                entitytype[self._model_entityset_entitytype] = entitytype_name
+                entitytype[self._model_property_odataversion] = '4'
+                writer.writerow(entitytype)
 
                 """ 3) properties """
 
-                properties = self._entities[es]['schema']['properties']
+                properties = es['schema']['properties']
 
                 for prop in properties:
                     column = copy.deepcopy(self._objects_head)
                     column['class'] = self._model_property
-                    column['identity'] =  entityset['identity'] + '/' + prop["name"]
+                    column['identity'] =  entitytype['identity'] + '/' + prop["name"]
                     column['core.name'] = prop["name"]
                     column['core.description'] = prop["name"]
                     column[self._model_property_datatype] = prop["type"]
@@ -88,8 +92,31 @@ class ODataConverterV4(ODataConverter):
                     column[self._model_property_precision] = None if getattr(prop, 'precision', None) == 0 else getattr(prop, 'precision', None)
                     column[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
 
+                    """ 4) key """
+
                     if prop['is_primary_key']:
+                        column['class'] = self._model_key
                         column[self._model_property_primarykey] = True
+
+                    writer.writerow(column)
+
+                """ 5) navigation properties """
+                
+                navigation_properties = es['schema']['navigation_properties']
+
+                for prop in navigation_properties:
+                    res = re.search(f"Collection\({self._modelname}.([a-zA-Z0-9]+)\)", prop["type"])
+
+                    if not res:
+                        continue
+
+                    column = copy.deepcopy(self._objects_head)
+                    column['class'] = self._model_navigationproperty
+                    column['identity'] =  entitytype['identity'] + '/' + prop["name"]
+                    column['core.name'] = prop["name"]
+                    column['core.description'] = prop["name"]
+                    column[self._model_property_datatype] = res.group(1)
+                    column[self._model_property_odataversion] = '4'
 
                     writer.writerow(column)
 
@@ -111,26 +138,39 @@ class ODataConverterV4(ODataConverter):
             writer = csv.DictWriter(f, self._links_head.keys())
             writer.writeheader()
              
-            for es in self._entities:
+            for es in self._entities.values():
+
+                entitytype_name = es['type'].replace(self._modelname + '.', "") 
+
+                """ 0) endpoint to entitytype """
+                toplevel = copy.deepcopy(self._links_head)
+                toplevel['association'] = self._association_resourceparanchild
+                toplevel['toObjectIdentity'] = 'Endpoint/' + entitytype_name
     
-                """ 1) com.informatica.ldm.odata.endpointentityset """
+                """ 1) com.informatica.ldm.odata.endpointentitytype """
 
-                endpointentityset = copy.deepcopy(self._links_head)
-                endpointentityset['association'] = self._association_endpointentityset
-                endpointentityset['fromObjectIdentity'] = 'Endpoint'
-                endpointentityset['toObjectIdentity'] = 'Endpoint/' + es
+                endpointentitytype = copy.deepcopy(self._links_head)
+                endpointentitytype['association'] = self._association_entitytypeproperty
+                endpointentitytype['fromObjectIdentity'] = 'Endpoint'
+                endpointentitytype['toObjectIdentity'] = 'Endpoint/' + entitytype_name
 
-                writer.writerow(endpointentityset)
+                writer.writerow(endpointentitytype)
 
-                """ 2) com.informatica.ldm.odata.entitysetproperty """
+                """ 2) com.informatica.ldm.odata.entitytypeproperty """
 
-                properties = self._entities[es]['schema']['properties']
+                properties = es['schema']['properties']
 
                 for prop in properties:
                     entitysetproperty = copy.deepcopy(self._links_head)
-                    entitysetproperty['association'] = self._association_entitysetproperty
-                    entitysetproperty['fromObjectIdentity'] = endpointentityset['toObjectIdentity']
-                    entitysetproperty['toObjectIdentity'] = endpointentityset['toObjectIdentity'] + '/' + prop['name']
+                    entitysetproperty['association'] = self._association_entitytypeproperty
+                    entitysetproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
+                    entitysetproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop['name']
+
+                    """ 4) key """
+
+                    if prop['is_primary_key']:
+                        column['class'] = self._model_key
+                        column[self._model_property_primarykey] = True
 
                     writer.writerow(entitysetproperty)
         
