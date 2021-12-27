@@ -158,12 +158,15 @@ class ODataConverterV2(ODataConverter):
              writer = csv.DictWriter(f, self._links_head.keys())
              writer.writeheader()
 
-             for es in self._client.schema.entity_sets:
+             for et in self._client.schema.entity_types:
+
+                if not isinstance(et, EntityType):
+                    continue
 
                 """ 0) endpoint to entitytype """
                 toplevel = copy.deepcopy(self._links_head)
                 toplevel['association'] = self._association_resourceparanchild
-                toplevel['toObjectIdentity'] = 'Endpoint/' + es.entity_type.name
+                toplevel['toObjectIdentity'] = 'Endpoint/' + et.name
 
                 writer.writerow(toplevel)
     
@@ -171,26 +174,23 @@ class ODataConverterV2(ODataConverter):
                 endpointentitytype = copy.deepcopy(self._links_head)
                 endpointentitytype['association'] = self._association_entitysetproperty
                 endpointentitytype['fromObjectIdentity'] = 'Endpoint'
-                endpointentitytype['toObjectIdentity'] = 'Endpoint/' + es.entity_type.name
+                endpointentitytype['toObjectIdentity'] = 'Endpoint/' + et.name
 
                 writer.writerow(endpointentitytype)
 
                 """ 2) com.informatica.ldm.odata.entitytypeproperty (primarykey) """
 
-                proprties = es.entity_type.proprties()
-
-                for prop in es.entity_type.key_proprties:
+                for prop in et.key_proprties:
                     entitytypeproperty = copy.deepcopy(self._links_head)
                     entitytypeproperty['association'] = self._association_entitytypeproperty
                     entitytypeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
                     entitytypeproperty['toObjectIdentity'] = endpointentitytype['toObjectIdentity'] + '/' + prop.name
 
                     writer.writerow(entitytypeproperty)
-                    proprties.remove(prop)
                 
                 """ 3) com.informatica.ldm.odata.entitytypeproperty """
 
-                for prop in proprties:
+                for prop in et.proprties():
                     entitytypeproperty = copy.deepcopy(self._links_head)
                     entitytypeproperty['association'] = self._association_entitytypeproperty
                     entitytypeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
@@ -200,7 +200,7 @@ class ODataConverterV2(ODataConverter):
                 
                 """ 4) com.informatica.ldm.odata.entitytynavigationpeproperty """
 
-                for prop in es.entity_type.nav_proprties:
+                for prop in et.nav_proprties:
                     entitytynavigationpeproperty = copy.deepcopy(self._links_head)
                     entitytynavigationpeproperty['association'] = self._association_entitytypeproperty
                     entitytynavigationpeproperty['fromObjectIdentity'] = endpointentitytype['toObjectIdentity']
@@ -257,11 +257,11 @@ class ODataConverterV2(ODataConverter):
                             navigationpropertyentitytype = copy.deepcopy(self._links_head)
                             navigationpropertyentitytype['association'] = self._association_directionaldataflow
 
-                            navigation2propertyentitytype = entitytype_to if es.entity_type == entitytype_from else entitytype_from
+                            navigation2propertyentitytype = entitytype_to if et.name == entitytype_from else entitytype_from
 
-                            for es in self._client.schema.entity_sets:
-                                if es.entity_type.name == navigation2propertyentitytype:
-                                    navigation2propertyentitytype = es.entity_type
+                            for et_2nd in self._client.schema.entity_types:
+                                if et_2nd.name == navigation2propertyentitytype:
+                                    navigation2propertyentitytype = et_2nd
                                     break
 
                             navigation2property = None
@@ -272,7 +272,7 @@ class ODataConverterV2(ODataConverter):
                             
                             if navigation2property:
 
-                                if es.entity_type == entitytype_from:
+                                if et.name == entitytype_from:
                                     navigationpropertyentitytype['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop.name
                                     navigationpropertyentitytype['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + navigation2property.name
                                 else:
@@ -302,7 +302,13 @@ class ODataConverterV2(ODataConverter):
 
         if esname:
             super().profile(esname)
-            entities = self._client.entity_sets._entity_sets[esname].get_entities().top(self._profling_lines).execute()
+
+            entitysets = getattr(self._client.entity_sets, esname, None)
+
+            if not entitysets:
+                return
+
+            entities = entitysets.get_entities().top(self._profling_lines).execute()
             et = None
 
             """ only profile when entities """
