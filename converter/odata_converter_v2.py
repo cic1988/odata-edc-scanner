@@ -2,6 +2,7 @@
 
 from .odata_converter import ODataConverter
 from taskqueue.taskqueue import consumer, worker, get_taskqueue, get_consumerqueue
+from pyodata.v2.model import EntityType
 
 import requests
 import pyodata
@@ -68,24 +69,25 @@ class ODataConverterV2(ODataConverter):
 
             writer.writerow(endpoint)
 
-            for es in self._client.schema.entity_sets:
+            for et in self._client.schema.entity_types:
+
+                if not isinstance(et, EntityType):
+                    continue
 
                 """ 2) entitytype """
 
                 entitytype = copy.deepcopy(self._objects_head)
                 entitytype['class'] = self._model_entitytype
-                entitytype['identity'] = endpoint['identity'] + '/' + es.entity_type.name
-                entitytype['core.name'] = es.entity_type.name
-                entitytype['core.description'] = es.entity_type.name
-                entitytype[self._model_entityset_entitytype] = es.entity_type.name
+                entitytype['identity'] = endpoint['identity'] + '/' + et.name
+                entitytype['core.name'] = et.name
+                entitytype['core.description'] = et.name
+                entitytype[self._model_entityset_entitytype] = et.name
                 entitytype[self._model_property_odataversion] = '2'
                 writer.writerow(entitytype)
 
                 """ 3) (primary) key """
 
-                proprties = es.entity_type.proprties()
-
-                for prop in es.entity_type.key_proprties:
+                for prop in et.key_proprties:
                     primarykey = copy.deepcopy(self._objects_head)
                     primarykey['class'] = self._model_key
                     primarykey['identity'] =  entitytype['identity'] + '/' + prop.name
@@ -101,11 +103,10 @@ class ODataConverterV2(ODataConverter):
                     primarykey[self._model_property_scale] = None if getattr(prop, 'scale', None) == 0 else getattr(prop, 'scale', None)
 
                     writer.writerow(primarykey)
-                    proprties.remove(prop)
                 
                 """ 4) column """
 
-                for prop in proprties:
+                for prop in et.proprties():
                     column = copy.deepcopy(self._objects_head)
                     column['class'] = self._model_property
                     column['identity'] =  entitytype['identity'] + '/' + prop.name
@@ -122,7 +123,7 @@ class ODataConverterV2(ODataConverter):
                     writer.writerow(column)
                 
                 """ 5) navigation property """
-                for prop in es.entity_type.nav_proprties:
+                for prop in et.nav_proprties:
                     navigation = copy.deepcopy(self._objects_head)
                     navigation['class'] = self._model_navigationproperty
                     navigation['identity'] =  entitytype['identity'] + '/' + prop.name
