@@ -307,9 +307,18 @@ class ODataConverterV2(ODataConverter):
 
             if not entitysets:
                 return
-
-            entities = entitysets.get_entities().top(self._profling_lines).execute()
+            
+            entities = None
             et = None
+            
+            try:
+                entities = entitysets.get_entities().top(self._profling_lines).execute()
+            except BaseException as err:
+                logger.debug(f'[... PROFILING ERROR at {esname} : {err} ...]')
+
+            if not entities:
+                logger.info(f'[... PROFILING ({esname}) FAILED : check data access problem ...]')
+                return
 
             """ only profile when entities """
             if entities:
