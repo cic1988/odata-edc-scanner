@@ -92,7 +92,7 @@ class ODataConverterV2(ODataConverter):
                     primarykey['class'] = self._model_key
                     primarykey['identity'] =  entitytype['identity'] + '/' + prop.name
                     primarykey['core.name'] = prop.name
-                    primarykey['core.description'] = prop.name
+                    primarykey['core.description'] = vars(prop)
                     primarykey[self._model_property_primarykey] = True
                     primarykey[self._model_property_datatype] = prop.typ.name
                     primarykey[self._model_property_odataversion] = '2'
@@ -111,7 +111,7 @@ class ODataConverterV2(ODataConverter):
                     column['class'] = self._model_property
                     column['identity'] =  entitytype['identity'] + '/' + prop.name
                     column['core.name'] = prop.name
-                    column['core.description'] = prop.name
+                    column['core.description'] = vars(prop)
                     column[self._model_property_datatype] = prop.typ.name
                     column[self._model_property_odataversion] = '2'
                     column[self._model_property_nullable] = getattr(prop, 'nullable', None)
@@ -128,7 +128,7 @@ class ODataConverterV2(ODataConverter):
                     navigation['class'] = self._model_navigationproperty
                     navigation['identity'] =  entitytype['identity'] + '/' + prop.name
                     navigation['core.name'] = prop.name
-                    navigation['core.description'] = prop.name
+                    navigation['core.description'] = vars(prop)
                     navigation[self._model_property_datatype] = prop.typ.name
                     navigation[self._model_property_odataversion] = '2'
                     navigation[self._model_property_nullable] = getattr(prop, 'nullable', None)
