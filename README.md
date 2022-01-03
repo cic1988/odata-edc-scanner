@@ -39,6 +39,7 @@ Odata scanner for EDC
 
 
 # Usage
+> :warning: **make sure that python-devel installed**
 1. Clone this repository via `git clone https://github.com/cic1988/odata-edc-scanner.git`
 2. `cd odata-edc-scanner`
 3. `python3 -m venv . `
