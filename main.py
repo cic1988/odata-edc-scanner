@@ -67,6 +67,7 @@ def execute(args):
 
     converter.convert_objects(args.force)
     converter.convert_links(args.force)
+    converter.zip_metadata()
 
     if resource:
         converter.fetch_pdata(args.force)

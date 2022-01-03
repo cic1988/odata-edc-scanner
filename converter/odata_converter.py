@@ -109,11 +109,31 @@ class ODataConverter():
             'toObjectIdentity': ''
         }
     
+    def zip_metadata(self):
+        from zipfile import ZipFile
+        zipMetadata = ZipFile(self._dir +  '/metadata.zip', 'w')
+
+        import os
+        from os.path import basename
+
+        path = self._dir + '/objects.csv'
+
+        if os.path.exists(path):
+            zipMetadata.write(path, basename(path))
+        
+        path = self._dir + '/links.csv'
+        
+        if os.path.exists(path):
+            zipMetadata.write(path, basename(path))
+            return
+        
+        logger.info('[... zip objects.csv or links.csv failed ...]')
+    
     def set_profiling_lines(self, lines=100):
         self._profling_lines = lines
 
     def fetch_pdata(self, force=False):
-        logger.info('... wrongly calling base function ...')
+        logger.info('[... zip links.csv and objects.csv ...]')
     
     def invoke_worker(self):
         from multiprocessing import Process
