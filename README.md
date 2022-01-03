@@ -49,4 +49,19 @@ Odata scanner for EDC
 7. `cp config.ini.sample config.ini`
 8. Edit the config.ini with required information (see comment in the file)
 9. `chmod u+x main.py`
-10. `./main.py -f`
+
+### Generate the needed files manually (smoke test only):
+`./main.py -f`
+
+### Example configuration in EDC:
+| Step | Screenshot |
+| ------------- | ------------- |
+| General setup. for example /home/infa/custom_scanner/odata/odata-edc-scanner/ is where you have cloned the repository. ODATASAMPLE is the folder specified in the config.ini file | ![image](https://user-images.githubusercontent.com/7901026/147973934-017ab4f3-8e86-4cdc-b431-8b7d37421071.png) |
+| Upload the generated ProfileableClassTypes.csv file | ![image](https://user-images.githubusercontent.com/7901026/147974373-f8695824-b5a1-405e-8ef7-89c466e0c1fa.png) |
+| SFTP configuration for the generated profiling files | ![image](https://user-images.githubusercontent.com/7901026/147974477-c5ba95d0-364f-4602-851f-5114f04f9727.png)|
+
+Other standard scanner configurations (data domains, etc.) are similar here. Then run the job.
+
+
+
+
