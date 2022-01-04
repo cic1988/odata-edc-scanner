@@ -238,18 +238,51 @@ class ODataConverterV2(ODataConverter):
 
                         writer.writerow(entitytypefromto)
 
+                        """
+                        TODO: multiple order shows the property flow. Following cases supported:
+                              1) 1-n
+                              2) n-1
+                              3) n-n
+
+                        However, n-m (n is not m) is not allowed. Case not seen yet.
+
+                        <ReferentialConstraint>
+                            <Principal Role="FromRole_ContactOriginDataAdditionalID">
+                                <PropertyRef Name="ContactOrigin"/>
+                                <PropertyRef Name="ContactID"/>
+                            </Principal>
+                            <Dependent Role="ToRole_ContactOriginDataAdditionalID">
+                                <PropertyRef Name="ContactOrigin"/>
+                                <PropertyRef Name="ContactID"/>
+                            </Dependent>
+                        </ReferentialConstraint>
+                        """
+
                         if prop.association.referential_constraint:
 
                             """ 6) core.DirectionalDataFlow (property -> property) """
 
-                            for prop_from in prop.association.referential_constraint.principal.property_names:
-                                for prop_to in prop.association.referential_constraint.dependent.property_names:
+                            if len(prop.association.referential_constraint.principal.property_names) == 1 or len(prop.association.referential_constraint.dependent.property_names) == 1:
+                                for prop_from in prop.association.referential_constraint.principal.property_names:
+                                    for prop_to in prop.association.referential_constraint.dependent.property_names:
+                                        propertyfromto = copy.deepcopy(self._links_head)
+                                        propertyfromto['association'] = self._association_directionaldataflow
+                                        propertyfromto['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop_from
+                                        propertyfromto['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop_to
+
+                                        writer.writerow(propertyfromto)
+                            elif len(prop.association.referential_constraint.principal.property_names) == len(prop.association.referential_constraint.dependent.property_names):
+                                for idx, prop_from in enumerate(prop.association.referential_constraint.principal.property_names):
+                                    prop_to = prop.association.referential_constraint.dependent.property_names[idx]
                                     propertyfromto = copy.deepcopy(self._links_head)
                                     propertyfromto['association'] = self._association_directionaldataflow
                                     propertyfromto['fromObjectIdentity'] = entitytypefromto['fromObjectIdentity'] + '/' + prop_from
                                     propertyfromto['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop_to
 
                                     writer.writerow(propertyfromto)
+                            else:
+                                logger.debug(f'[... n-m is not allowed: principle: {prop.association.referential_constraint.principal.property_name}]')
+                                logger.debug(f'[... n-m is not allowed: dependent: {prop.association.referential_constraint.dependent.property_name}]')
                         else:
 
                             """ 6) core.DirectionalDataFlow (navigationproperty -> navigationproperty) """
