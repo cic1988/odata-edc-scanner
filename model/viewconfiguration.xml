@@ -18,6 +18,12 @@
         </viewConfiguration>
         <viewConfiguration>
             <classId>com.informatica.ldm.odata.navigationproperty</classId>
+        </viewConfiguration>
+        <viewConfiguration>
+            <classId>com.informatica.ldm.odata.functionimport</classId>
+        </viewConfiguration>  
+        <viewConfiguration>
+            <classId>com.informatica.ldm.odata.parameter</classId>
         </viewConfiguration>  
     </viewConfigurations>
 </ViewConfigurationCollection>

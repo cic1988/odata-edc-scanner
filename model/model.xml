@@ -82,7 +82,29 @@
                 <superClass>core.DataElement</superClass>
             </superClasses>
             <deprecated>false</deprecated>
-        </class>  
+        </class>
+        <class>
+            <name>functionimport</name>
+            <label>functionimport</label>
+            <description></description>
+            <isFirstClass>true</isFirstClass>
+            <boost>LOW</boost>
+            <superClasses>
+                <superClass>core.DataSet</superClass>
+            </superClasses>
+            <deprecated>false</deprecated>
+        </class>
+        <class>
+            <name>parameter</name>
+            <label>parameter</label>
+            <description></description>
+            <isFirstClass>false</isFirstClass>
+            <boost>LOW</boost>
+            <superClasses>
+                <superClass>core.DataElement</superClass>
+            </superClasses>
+            <deprecated>false</deprecated>
+        </class>
     </classes>
     <attributes>
         <attribute>
@@ -165,6 +187,30 @@
             <toClass>com.informatica.ldm.odata.navigationproperty</toClass>
             <fromLabel>entitytype</fromLabel>
             <toLabel>navigationproperty</toLabel>
+            <associationKinds>
+                <associationKind>core.ParentChild</associationKind>
+            </associationKinds>
+            <deprecated>false</deprecated>
+            <aggregate>false</aggregate>
+        </association>
+        <association>
+            <name>endpointfunctionimport</name>
+            <fromClass>com.informatica.ldm.odata.endpoint</fromClass>
+            <toClass>com.informatica.ldm.odata.functionimport</toClass>
+            <fromLabel>endpoint</fromLabel>
+            <toLabel>functionimport</toLabel>
+            <associationKinds>
+                <associationKind>core.ParentChild</associationKind>
+            </associationKinds>
+            <deprecated>false</deprecated>
+            <aggregate>false</aggregate>
+        </association>
+        <association>
+            <name>functionimportparameter</name>
+            <fromClass>com.informatica.ldm.odata.functionimport</fromClass>
+            <toClass>com.informatica.ldm.odata.parameter</toClass>
+            <fromLabel>functionimport</fromLabel>
+            <toLabel>parameter</toLabel>
             <associationKinds>
                 <associationKind>core.ParentChild</associationKind>
             </associationKinds>
