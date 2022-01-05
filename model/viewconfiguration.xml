@@ -18,6 +18,6 @@
         </viewConfiguration>
         <viewConfiguration>
             <classId>com.informatica.ldm.odata.navigationproperty</classId>
-        </viewConfiguration>      
+        </viewConfiguration>  
     </viewConfigurations>
 </ViewConfigurationCollection>

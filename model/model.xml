@@ -1,7 +1,7 @@
 <Package>
     <deprecated>false</deprecated>
-    <packageLabel>odata v2 model</packageLabel>
-    <packageDescription>model for odata with v2 support</packageDescription>
+    <packageLabel>odata model</packageLabel>
+    <packageDescription>model for odata with v2 and v4 support</packageDescription>
     <classAttributes/>
     <referenceAttributes/>
     <referenceDatatypes/>
@@ -12,10 +12,10 @@
         </requiredPackage>
         <requiredPackage>
             <packageName>com.infa.ldm.relational</packageName>
-            <version>26</version>
+            <version>24</version>
         </requiredPackage>
     </requiredPackages>
-    <version>6</version>
+    <version>1</version>
     <classes>
         <class>
             <name>endpoint</name>
@@ -76,7 +76,7 @@
             <name>navigationproperty</name>
             <label>navigationproperty</label>
             <description></description>
-            <isFirstClass>false</isFirstClass>
+            <isFirstClass>true</isFirstClass>
             <boost>LOW</boost>
             <superClasses>
                 <superClass>core.DataElement</superClass>
@@ -104,77 +104,6 @@
             <data>false</data>
         </attribute>
         <attribute>
-            <name>dataType</name>
-            <label>DATATYPE</label>
-            <dataType>core.String</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <analyzer>STRING</analyzer>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>true</data>
-        </attribute>
-        <attribute>
-            <name>odataVersion</name>
-            <label>ODATAVERSION</label>
-            <dataType>core.String</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <analyzer>STRING</analyzer>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>true</data>
-        </attribute>
-        <attribute>
-            <name>PrimaryKeyColumn</name>
-            <label>Primary Key Column</label>
-            <dataType>core.Boolean</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <boost>LOW</boost>
-            <description/>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
-        <attribute>
-            <name>DATATYPE</name>
-            <label>DATATYPE</label>
-            <dataType>core.String</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <analyzer>STRING</analyzer>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
-        <attribute>
             <name>ODATAVERSION</name>
             <label>ODATAVERSION</label>
             <dataType>core.String</dataType>
@@ -192,105 +121,8 @@
             <fuzzy>false</fuzzy>
             <data>false</data>
         </attribute>
-        <attribute>
-            <name>NULLABLE</name>
-            <label>NULLABLE</label>
-            <dataType>core.Boolean</dataType>
-            <searchable>false</searchable>
-            <facetable>true</facetable>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
-        <attribute>
-            <name>MAXLENGTH</name>
-            <label>MAXLENGTH</label>
-            <dataType>core.Integer</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
-        <attribute>
-            <name>FIXEDLENGTH</name>
-            <label>FIXEDLENGTH</label>
-            <dataType>core.Integer</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
-        <attribute>
-            <name>PRECISION</name>
-            <label>PRECISION</label>
-            <dataType>core.Integer</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
-        <attribute>
-            <name>SCALE</name>
-            <label>SCALE</label>
-            <dataType>core.Integer</dataType>
-            <searchable>false</searchable>
-            <facetable>false</facetable>
-            <boost>LOW</boost>
-            <description></description>
-            <multivalued>false</multivalued>
-            <suggestable>false</suggestable>
-            <sortable>false</sortable>
-            <visible>true</visible>
-            <deprecated>true</deprecated>
-            <derived>false</derived>
-            <fuzzy>false</fuzzy>
-            <data>false</data>
-        </attribute>
     </attributes>
     <associations>
-        <association>
-            <name>endpointentityset</name>
-            <fromClass>com.informatica.ldm.odata.endpoint</fromClass>
-            <toClass>com.informatica.ldm.odata.entityset</toClass>
-            <fromLabel>endpoint</fromLabel>
-            <toLabel>entityset</toLabel>
-            <associationKinds>
-                <associationKind>core.ParentChild</associationKind>
-            </associationKinds>
-            <deprecated>false</deprecated>
-            <aggregate>false</aggregate>
-        </association>
         <association>
             <name>endpointentitytype</name>
             <fromClass>com.informatica.ldm.odata.endpoint</fromClass>
@@ -303,12 +135,12 @@
             <deprecated>false</deprecated>
             <aggregate>false</aggregate>
         </association>
-         <association>
-            <name>entitysetproperty</name>
-            <fromClass>com.informatica.ldm.odata.entityset</fromClass>
-            <toClass>com.informatica.ldm.odata.property</toClass>
-            <fromLabel>entityset</fromLabel>
-            <toLabel>property</toLabel>
+        <association>
+            <name>entitytypekey</name>
+            <fromClass>com.informatica.ldm.odata.entitytype</fromClass>
+            <toClass>com.informatica.ldm.odata.key</toClass>
+            <fromLabel>entitytype</fromLabel>
+            <toLabel>key</toLabel>
             <associationKinds>
                 <associationKind>core.ParentChild</associationKind>
             </associationKinds>
@@ -321,18 +153,6 @@
             <toClass>com.informatica.ldm.odata.property</toClass>
             <fromLabel>entitytype</fromLabel>
             <toLabel>property</toLabel>
-            <associationKinds>
-                <associationKind>core.ParentChild</associationKind>
-            </associationKinds>
-            <deprecated>false</deprecated>
-            <aggregate>false</aggregate>
-        </association>
-        <association>
-            <name>entitytypekey</name>
-            <fromClass>com.informatica.ldm.odata.entitytype</fromClass>
-            <toClass>com.informatica.ldm.odata.key</toClass>
-            <fromLabel>entitytype</fromLabel>
-            <toLabel>key</toLabel>
             <associationKinds>
                 <associationKind>core.ParentChild</associationKind>
             </associationKinds>
