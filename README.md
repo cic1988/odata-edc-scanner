@@ -39,21 +39,33 @@ Odata scanner for EDC
 
 
 # Usage
-> :warning: **make sure that python-devel installed**
+### Initial setup
 1. Clone this repository via `git clone https://github.com/cic1988/odata-edc-scanner.git`
-2. `cd odata-edc-scanner`
-3. `python3 -m venv . `
-4. `source bin/activate`
-5. `pip install --upgrade pip`
-6. `pip install -r requirements.txt`
-7. `cp config.ini.sample config.ini`
-8. Edit the config.ini with required information (see comment in the file)
-9. `chmod u+x main.py`
+2. (optional) `yum install python3-devel -y`
+3. `cd odata-edc-scanner`
+4. `python3 -m venv . `
+5. `source bin/activate`
+6. `pip install --upgrade pip`
+7. `pip install -r requirements.txt`
+8. `cp config.ini.sample config.ini`
+9. Edit the config.ini with required information (see comment in the file)
+10. `chmod u+x main.py`
 
-### Generate the needed files manually (smoke test only):
-`./main.py -f`
+### Import model
+1. Download the model file: https://github.com/cic1988/odata-edc-scanner/releases/download/v0.1/model.zip
+2. Import this model in EDC admin panel
+<img src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" width="300" />
+3. Create a custom resource with imported data model
+<img src="https://user-images.githubusercontent.com/7901026/148259028-eccde493-adc9-4f35-a5f7-202d9a22e891.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148259028-eccde493-adc9-4f35-a5f7-202d9a22e891.png" width="300" />
+4. Use this newly create resource to setup scanner
 
-### Example configuration in EDC:
+### Generate the needed files manually (if you want to run scanner off-EDC):
+1. Run `./main.py -f`
+2. Upload the metadata.zip to the scanner configuration
+3. Upload the ProfileableClassTypes.csv to the field `Classes enabled for Profiling`
+4. (optional - when profiling enabled) Point the SFTP location and login to the folder, where the script has created the files
+
+### Example configuration in EDC (if you want to automate scanning in EDC):
 | Step | Screenshot |
 | ------------- | ------------- |
 | General setup. for example /home/infa/custom_scanner/odata/odata-edc-scanner/ is where you have cloned the repository. ODATASAMPLE is the folder specified in the config.ini file | ![image](https://user-images.githubusercontent.com/7901026/147973934-017ab4f3-8e86-4cdc-b431-8b7d37421071.png) |
