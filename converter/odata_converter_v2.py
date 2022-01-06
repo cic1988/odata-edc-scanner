@@ -139,6 +139,35 @@ class ODataConverterV2(ODataConverter):
 
                     writer.writerow(navigation)
 
+            """ 6) function import """
+            for fs in self._client.schema.function_imports:
+                functionimport = copy.deepcopy(self._objects_head)
+                functionimport['class'] = self._model_functionimport
+                functionimport['identity'] = endpoint['identity'] + '/' + fs.name
+                functionimport['core.name'] = fs.name
+                functionimport['core.description'] = f'{fs.http_method} {fs.name}'
+                functionimport[self._model_property_odataversion] = '2'
+
+                if fs.return_type is not None:
+                    functionimport['core.description'] = functionimport['core.description'] + f' < {fs.return_type.name}'
+
+                writer.writerow(functionimport)
+
+                for param in fs.parameters:
+                    parameter = copy.deepcopy(self._objects_head)
+                    parameter['class'] = self._model_parameter
+                    parameter['identity'] =  functionimport['identity'] + '/' + param.name
+                    parameter['core.name'] = param.name
+                    parameter['core.description'] = f' > {param.name}({param.typ.name})'
+                    parameter[self._model_property_datatype] = param.typ.name
+                    parameter[self._model_property_odataversion] = '2'
+                    parameter[self._model_property_nullable] = getattr(param, 'nullable', None)
+                    parameter[self._model_property_maxlength] = getattr(param, 'max_length', None)
+                    parameter[self._model_property_fixedlength] = getattr(param, 'fixed_length', None)
+                    parameter[self._model_property_precision] = None if getattr(param, 'precision', None) == 0 else getattr(param, 'precision', None)
+                    parameter[self._model_property_scale] = None if getattr(param, 'scale', None) == 0 else getattr(param, 'scale', None)
+
+                    writer.writerow(parameter)
 
         if os.path.exists(tmp_file):
             os.rename(tmp_file, os.path.abspath(self._dir) + '/objects.csv')
@@ -155,10 +184,10 @@ class ODataConverterV2(ODataConverter):
         tmp_file = os.path.abspath(self._dir) + '/links.csv.' + uuid.uuid4().hex.upper()[0:6]
 
         with open(tmp_file, 'w', encoding='UTF8', newline='') as f:
-             writer = csv.DictWriter(f, self._links_head.keys())
-             writer.writeheader()
+            writer = csv.DictWriter(f, self._links_head.keys())
+            writer.writeheader()
 
-             for et in self._client.schema.entity_types:
+            for et in self._client.schema.entity_types:
 
                 if not isinstance(et, EntityType):
                     continue
@@ -313,6 +342,31 @@ class ODataConverterV2(ODataConverter):
                                     navigationpropertyentitytype['toObjectIdentity'] = entitytypefromto['toObjectIdentity'] + '/' + prop.name
 
                                 writer.writerow(navigationpropertyentitytype)
+            
+            for fs in self._client.schema.function_imports:
+                """ 7) endpoint to function import """
+                toplevel = copy.deepcopy(self._links_head)
+                toplevel['association'] = self._association_resourceparanchild
+                toplevel['toObjectIdentity'] = 'Endpoint/' + fs.name
+
+                writer.writerow(toplevel)
+
+                """ 8) com.informatica.ldm.odata.endpointfunctionimport """
+                endpointfunctionimport = copy.deepcopy(self._links_head)
+                endpointfunctionimport['association'] = self._association_endpointfunctionimport
+                endpointfunctionimport['fromObjectIdentity'] = 'Endpoint'
+                endpointfunctionimport['toObjectIdentity'] = 'Endpoint/' + fs.name
+
+                writer.writerow(endpointfunctionimport)
+
+                """ 8) com.informatica.ldm.odata.functionimportparameter """
+                for param in fs.parameters:
+                    functionimportparameter = copy.deepcopy(self._links_head)
+                    functionimportparameter['association'] = self._association_functionimportparameter
+                    functionimportparameter['fromObjectIdentity'] = endpointfunctionimport['toObjectIdentity']
+                    functionimportparameter['toObjectIdentity'] = endpointfunctionimport['toObjectIdentity'] + '/' + param.name
+
+                    writer.writerow(functionimportparameter)
 
         
         if os.path.exists(tmp_file):

@@ -33,6 +33,8 @@ class ODataConverter():
         self._model_key = 'com.informatica.ldm.odata.key'
         self._model_property = 'com.informatica.ldm.odata.property'
         self._model_navigationproperty = 'com.informatica.ldm.odata.navigationproperty'
+        self._model_functionimport = 'com.informatica.ldm.odata.functionimport'
+        self._model_parameter = 'com.informatica.ldm.odata.parameter'
 
         """ 2) attribute """
         self._model_entityset_entitytype = 'com.informatica.ldm.odata.ENTITYTYPE'
@@ -52,6 +54,8 @@ class ODataConverter():
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
         self._association_entitytypekey = 'com.informatica.ldm.odata.entitytypekey'
         self._association_entitytypenavigationproperty = 'com.informatica.ldm.odata.entitytypenavigationproperty'
+        self._association_endpointfunctionimport = 'com.informatica.ldm.odata.endpointfunctionimport'
+        self._association_functionimportparameter = 'com.informatica.ldm.odata.functionimportparameter'
 
         """ 4) lineage (within the data source) """
         self._association_datasourcedataflow = 'core.DataSourceDataFlow'
