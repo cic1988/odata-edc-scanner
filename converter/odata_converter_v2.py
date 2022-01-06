@@ -396,7 +396,6 @@ class ODataConverterV2(ODataConverter):
                 return
             
             entities = None
-            et = None
             
             try:
                 entities = entitysets.get_entities().top(self._profling_lines).execute()
@@ -408,30 +407,28 @@ class ODataConverterV2(ODataConverter):
                 return
 
             """ only profile when entities """
-            if entities:
-                entity = entities[0]
-                et = entity._entity_type.name
-                proprties = entity._entity_type.proprties()
+            entity = entities[0]
+            et = entity._entity_type.name
+            proprties = entity._entity_type.proprties()
 
-                header = []
-                for prop in proprties:
-                    header.append(prop.name)
+            header = []
+            for prop in proprties:
+                header.append(prop.name)
                 
-                if header:
-                    with open(self._dir + '/' + esname + '.csv', 'w', encoding='UTF8') as f:
-                        writer = csv.writer(f)
-                        writer.writerow(header)
+            if header:
+                with open(self._dir + '/' + esname + '.csv', 'w', encoding='UTF8') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(header)
 
-                        for entity in entities:
-                            row = []
-
-                            for prop in proprties:
-                                """ TODO: Edm.Binary is not allowed to profile """
-                                if prop.typ.name == 'Edm.Binary':
-                                    row.append(None)
-                                    continue
-                                row.append(str(getattr(entity, prop.name)))
-                            writer.writerow(row)
+                    for entity in entities:
+                        row = []
+                        for prop in proprties:
+                            """ TODO: Edm.Binary is not allowed to profile """
+                            if prop.typ.name == 'Edm.Binary':
+                                row.append(None)
+                                continue
+                            row.append(str(getattr(entity, prop.name)))
+                        writer.writerow(row)
             
             """ put dataset identifier into consumer queue """
 
