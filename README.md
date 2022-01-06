@@ -10,7 +10,7 @@ Odata scanner for EDC
   * :white_check_mark: property
   * :white_check_mark: navigation property
   * :white_check_mark: association + navigation property
-  * :soon: function import
+  * :white_check_mark: function import
   * :soon: custom attributes
 
 * V3 Objects :soon:
@@ -34,8 +34,8 @@ Odata scanner for EDC
 | Screenshot 1 | Screenshot 2 |
 | ------------- | ------------- |
 | ![image](https://user-images.githubusercontent.com/7901026/147205262-58637155-00c9-41bf-ad11-818fd2b3a7ff.png)  | ![image](https://user-images.githubusercontent.com/7901026/147205341-829e5e96-c531-4e95-b54b-67c4eac0e8e9.png)  |
-| ![image](https://user-images.githubusercontent.com/7901026/147205890-27703e97-e0a8-440d-90a4-80b819c67789.png)  | ![image](https://user-images.githubusercontent.com/7901026/147392282-99236022-79f6-4c44-b3ba-4ba683702e93.png)
-|
+| ![image](https://user-images.githubusercontent.com/7901026/147205890-27703e97-e0a8-440d-90a4-80b819c67789.png)  | ![image](https://user-images.githubusercontent.com/7901026/147392282-99236022-79f6-4c44-b3ba-4ba683702e93.png) |
+| ![image](https://user-images.githubusercontent.com/7901026/148360223-eef3475a-fa0e-4fad-a747-52f3581a4152.png) | ![image](https://user-images.githubusercontent.com/7901026/148360332-fba2337b-0891-4250-ac47-3540196094f5.png) |
 
 
 # Usage
