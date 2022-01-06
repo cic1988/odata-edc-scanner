@@ -52,7 +52,7 @@ Odata scanner for EDC
 10. `chmod u+x main.py`
 
 ### Import model
-1. Download the model file: https://github.com/cic1988/odata-edc-scanner/releases/download/v0.1/model.zip
+1. Download the model.zip file from the latest release: https://github.com/cic1988/odata-edc-scanner/releases
 2. Import this model in EDC admin panel
 <img src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" width="300" />
 3. Create a custom resource with imported data model
