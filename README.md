@@ -28,7 +28,9 @@ Odata scanner for EDC
   * :white_check_mark: metadata
   * :white_check_mark: lineage
   * :white_check_mark: profiling (configurable) + data domain discovery
- 
+  * :question: production-ready. Commonly seen in organizations, that security concept (for example OAUTH, basic) and customization (for example OData endpiont via payload, non-standard URL). This needs to be addressed either via this scanner natively or via a proxy-way (for example nginx). This is currently open.
+
+
 * Screenshot (example of https://services.odata.org/V2/Northwind/Northwind.svc)
 
 | Screenshot 1 | Screenshot 2 |
