@@ -50,7 +50,14 @@ def execute(args):
 
     factory = ODataConverterFactory()
     factory.set_version(odata_version)
-    converter = factory.create_converter(root_url, dir, resource, worker, args.asworker_id)
+    #converter = factory.create_converter(root_url, dir, resource, worker, args.asworker_id)
+    converter = factory.create_converter({
+        'root_url': root_url,
+        'dir': dir,
+        'resource': resource,
+        'worker': worker,
+        'worker_id': args.asworker_id
+    })
     converter.set_profiling_lines(profiling_lines)
 
     if args.asworker:

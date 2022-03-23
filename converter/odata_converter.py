@@ -266,14 +266,14 @@ class ODataConverterFactory():
         else:
             logger.info(f'[... invalid {version} given: only v2, v3 or v4 allowed ...]')
     
-    def create_converter(self, endpoint, dir, resource, worker, worker_id):
+    def create_converter(self, params):
         from .odata_converter_v2 import ODataConverterV2
         from .odata_converter_v4 import ODataConverterV4
 
         if self._version == 'v2':
-            return ODataConverterV2(endpoint, dir, resource, worker, worker_id)
+            return ODataConverterV2(params)
         elif self._version == 'v4':
-            return ODataConverterV4(endpoint, dir, resource, worker, worker_id)
+            return ODataConverterV4(params['root_url'], params['dir'], params['resource'], params['worker'], params['worker_id'])
         else:
             logger.info('[... only v2 and v4 are supported ...]')
             return None
