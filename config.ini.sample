@@ -6,6 +6,8 @@
 ; queuename: name task queue to process profiling task (only when profiling enabled)
 ; consumerqueuename: name consumer queue to summarize profiling task result (only when profiling enabled)
 ; root_url: the ODATA REST API endpoint without query or any other parameters
+; username: the username for basic authentication. Leave it empty if not authentication required.
+; password: the password for basic authentication. Leave it empty if not authentication required.
 ; odata_version: the odata version manually given; v2 and v4 available
 ; dir: directory path to save the output files
 ; worker: number of worker to run profiling task
@@ -17,6 +19,8 @@ dbfilename = ./tmp/redis.rdb
 queuename = taskqueue
 consumerqueuename = consumerqueue
 root_url = https://services.odata.org/V2/Northwind/Northwind.svc
+username =
+password =
 odata_version = v2
 dir = ./test2
 worker = 2

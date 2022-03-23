@@ -53,6 +53,8 @@ def execute(args):
     #converter = factory.create_converter(root_url, dir, resource, worker, args.asworker_id)
     converter = factory.create_converter({
         'root_url': root_url,
+        'username': username,
+        'password': password,
         'dir': dir,
         'resource': resource,
         'worker': worker,

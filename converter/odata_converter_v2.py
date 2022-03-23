@@ -14,6 +14,7 @@ class ODataConverterV2(ODataConverter):
     def __init__(self, params):
         ODataConverter.__init__(self, params['root_url'], params['dir'], params['resource'], params['worker'], params['worker_id'])
         self._session = requests.Session()
+        self._session.auth = (params['username'], params['password'])
         self._client = pyodata.Client(params['root_url'], self._session)
 
     def print_out_metadata_info(self):
