@@ -22,6 +22,8 @@ def execute(args):
     cp.read(pathname + '/config.ini')
 
     root_url = cp.get('local', 'root_url')
+    username = cp.get('local', 'username')
+    password = cp.get('local', 'password')
     odata_version = cp.get('local', 'odata_version')
     dir = cp.get('local', 'dir')
     worker = cp.get('local', 'worker', fallback=1)
