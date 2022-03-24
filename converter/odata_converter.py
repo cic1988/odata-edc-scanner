@@ -50,6 +50,7 @@ class ODataConverter():
         """ 3) association """
         self._association_resourceparanchild = 'core.ResourceParentChild'
         self._association_endpointentityset = 'com.informatica.ldm.odata.endpointentityset'
+        self._association_endpointentitytype = 'com.informatica.ldm.odata.endpointentitytype'
         self._association_entitytypeproperty = 'com.informatica.ldm.odata.entitytypeproperty'
         self._association_entitysetproperty = 'com.informatica.ldm.odata.entitysetproperty'
         self._association_entitytypekey = 'com.informatica.ldm.odata.entitytypekey'

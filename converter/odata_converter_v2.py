@@ -205,7 +205,7 @@ class ODataConverterV2(ODataConverter):
     
                 """ 1) com.informatica.ldm.odata.endpointentitytype """
                 endpointentitytype = copy.deepcopy(self._links_head)
-                endpointentitytype['association'] = self._association_entitysetproperty
+                endpointentitytype['association'] = self._association_endpointentitytype
                 endpointentitytype['fromObjectIdentity'] = 'Endpoint'
                 endpointentitytype['toObjectIdentity'] = 'Endpoint/' + et.name
 
@@ -404,10 +404,11 @@ class ODataConverterV2(ODataConverter):
             try:
                 entities = entitysets.get_entities().top(self._profling_lines).execute()
             except BaseException as err:
-                logger.debug(f'[... PROFILING ERROR at {esname} : {err} ...]')
+                logger.info(f'[... PROFILING ERROR at {esname} : {err} ...]')
+                return
 
             if not entities:
-                logger.info(f'[... PROFILING ({esname}) FAILED : check data access problem ...]')
+                logger.info(f'[... PROFILING ({esname}) IGNORED : empty entity ...]')
                 return
 
             """ only profile when entities """
