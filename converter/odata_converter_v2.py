@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 class ODataConverterV2(ODataConverter):
     def __init__(self, params):
+        # see: https://github.com/SAP/python-pyodata/pull/149
+        pyodata.v2.model.FIX_SCREWED_UP_MINIMAL_DATETIME_VALUE = True
         ODataConverter.__init__(self, params['root_url'], params['dir'], params['resource'], params['worker'], params['worker_id'])
         self._session = requests.Session()
         self._session.auth = (params['username'], params['password'])
