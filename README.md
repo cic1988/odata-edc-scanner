@@ -1,6 +1,9 @@
 # Project: odata-edc-scanner
 Odata scanner for EDC
 
+# Notice
+The main branch does not contain the latest improvement for v2 and v4. If the Odata version is defined in your scanner, please switch to the corresponding branch.
+
 # Overview
 :white_check_mark: (supported) :construction: (on-going) :soon: (plan)
 
