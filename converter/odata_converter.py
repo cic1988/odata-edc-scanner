@@ -19,6 +19,7 @@ class ODataConverter():
         self._workerid = worker_id
         self._resource = resource
         self._profling_lines = 1000
+        self._profiling_filter = None
 
         """ objects.csv / links.csv protocol """
         self._objects_head = {}
@@ -136,6 +137,10 @@ class ODataConverter():
     
     def set_profiling_lines(self, lines=100):
         self._profling_lines = lines
+    
+    def set_profiling_filter(self, filter):
+        if filter:
+            self._profiling_filter = filter.split(':')
 
     def fetch_pdata(self, force=False):
         logger.info('[... zip links.csv and objects.csv ...]')

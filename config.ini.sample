@@ -11,6 +11,8 @@
 ; odata_version: the odata version manually given; v2 and v4 available
 ; dir: directory path to save the output files
 ; worker: number of worker to run profiling task
+; profiling_lines: either positive value e.g., 1000 or all (pagination fix coded with 10000 lines)
+; profiling_filter: profiling only specific data object. Usually used when profiling a large data object e.g., > 100,000 lines. Split multiple objects with :
 ; resource: name of the resource in EDC; when not given, profiling is disabled
 ;--------------------------------------------------------------
 
@@ -25,4 +27,5 @@ odata_version = v2
 dir = ./test2
 worker = 2
 profiling_lines = 1000
+profiling_filter =
 resource = ODATASAMPLE

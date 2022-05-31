@@ -29,6 +29,7 @@ def execute(args):
     worker = cp.get('local', 'worker', fallback=1)
     resource = cp.get('local', 'resource', fallback=None)
     profiling_lines = cp.get('local', 'profiling_lines', fallback=1000)
+    profiling_filter = cp.get('local', 'profiling_filter')
 
     root_url = root_url if not args.SERVICE_ROOT_URL else root_url
     dir = dir if not args.dir else dir
@@ -42,6 +43,7 @@ def execute(args):
     logger.info(f'[... DIR: {dir} ...]')
     logger.info(f'[... RESORUCE NAME: {resource} ...]')
     logger.info(f'[... PROFILING LINES: {profiling_lines} ...]')
+    logger.info(f'[... PROFILING FILTER: {profiling_filter} ...]')
     logger.info(f'[... NUMBER OF WORKERS: {worker} ...]')
     logger.info(f'[... AS WORKER: {args.asworker} ...]')
     logger.info(f'[... AS CONSUMER: {args.asconsumer} ...]')
@@ -50,7 +52,6 @@ def execute(args):
 
     factory = ODataConverterFactory()
     factory.set_version(odata_version)
-    #converter = factory.create_converter(root_url, dir, resource, worker, args.asworker_id)
     converter = factory.create_converter({
         'root_url': root_url,
         'username': username,
@@ -61,6 +62,7 @@ def execute(args):
         'worker_id': args.asworker_id
     })
     converter.set_profiling_lines(profiling_lines)
+    converter.set_profiling_filter(profiling_filter)
 
     if args.asworker:
         logger.info('[... WORKER START ...]')

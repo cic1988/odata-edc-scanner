@@ -385,6 +385,9 @@ class ODataConverterV2(ODataConverter):
         consumer_q.clear()
 
         for es in self._client.schema.entity_sets:
+            if self._profiling_filter and len(self._profiling_filter) > 0:
+                if es.name not in self._profiling_filter:
+                    continue
             profiling_q.put(es.name)
 
         super().invoke_worker()
@@ -404,7 +407,24 @@ class ODataConverterV2(ODataConverter):
             entities = None
             
             try:
-                entities = entitysets.get_entities().top(self._profling_lines).execute()
+                count = 0
+
+                if self._profling_lines != 'all':
+                    count = self._profling_lines
+                else:
+                    count = entitysets.get_entities().count().execute()
+                """
+                TODO: pagination can be improved ...
+                """
+                skip = 0
+                count = int(count)
+                top = 10000 if count > 10000 else count
+                entities = []
+
+                while skip < count:
+                    entities = entities + entitysets.get_entities().skip(skip).top(top).execute()
+                    skip += top
+
             except BaseException as err:
                 logger.info(f'[... PROFILING ERROR at {esname} : {err} ...]')
                 return
