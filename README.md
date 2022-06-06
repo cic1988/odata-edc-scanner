@@ -5,9 +5,9 @@ Odata scanner for EDC
 The main branch is since 06.06.2022 set to v2 branch as v2 is the main supported Odata version.
 
 # Overview
-:white_check_mark: (supported) :construction: (on-going) :soon: (plan)
+:white_check_mark: (supported) :construction: (on-going) :soon: (plan) :no_entry_sign: (backlog)
 
-* V2 Objects :construction: (see v2 and main branch)
+* V2 Objects :white_check_mark: (see v2 and main branch)
   * :white_check_mark: basic authentication
   * :white_check_mark: entity type
   * :white_check_mark: key
