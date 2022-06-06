@@ -1,37 +1,39 @@
-# Project: odata-edc-scanner
+# Custom Scanner: odata-edc-scanner
 Odata scanner for EDC
 
 # Notice
-The main branch does not contain the latest improvement for v2 and v4. If the Odata version is defined in your scanner, please switch to the corresponding branch.
+The main branch is since 06.06.2022 set to v2 branch as v2 is the main supported Odata version.
 
 # Overview
 :white_check_mark: (supported) :construction: (on-going) :soon: (plan)
 
-* V2 Objects :construction: (see v2 branch)
+* V2 Objects :construction: (see v2 and main branch)
+  * :white_check_mark: basic authentication
   * :white_check_mark: entity type
   * :white_check_mark: key
   * :white_check_mark: property
   * :white_check_mark: navigation property
   * :white_check_mark: association + navigation property
   * :white_check_mark: function import
-  * :soon: custom attributes
+  * :white_check_mark: custom attributes
 
-* V3 Objects :soon:
+* V3 Objects :no_entry_sign:
 
 * V4 Objects :construction: (see v4 branch)
+  * :no_entry_sign: basic authentication
   * :white_check_mark: entity type
   * :white_check_mark: key
   * :white_check_mark: property
   * :white_check_mark: navigation property
-  * :soon: association + navigation property
-  * :soon: function import
-  * :soon: custom attriburtes
+  * :no_entry_sign: association + navigation property
+  * :no_entry_sign: function import
+  * :no_entry_sign: custom attriburtes
 
 * Feature
   * :white_check_mark: metadata
   * :white_check_mark: lineage
-  * :white_check_mark: profiling (configurable) + data domain discovery
-  * :question: production-ready. Commonly seen in organizations, that security concept (for example OAUTH, basic) and customization (for example OData endpiont via payload, non-standard URL). This needs to be addressed either via this scanner natively or via a proxy-way (for example nginx). This is currently open.
+  * :white_check_mark: profiling (configurable + filter) + data domain discovery
+  * :warning: currently only basic authentication supported by v2 or main branch
 
 
 * Screenshot (example of https://services.odata.org/V2/Northwind/Northwind.svc)
