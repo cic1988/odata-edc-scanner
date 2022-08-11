@@ -279,12 +279,7 @@ class ODataConverterFactory():
     def create_converter(self, params):
         from .odata_converter_v2 import ODataConverterV2
         from .odata_converter_v4 import ODataConverterV4
+        from .sapsc_converter import SAPSCConverter
 
-        if self._version == 'v2':
-            return ODataConverterV2(params)
-        elif self._version == 'v4':
-            return ODataConverterV4(params['root_url'], params['dir'], params['resource'], params['worker'], params['worker_id'])
-        else:
-            logger.info('[... only v2 and v4 are supported ...]')
-            return None
+        return SAPSCConverter(params)
 
