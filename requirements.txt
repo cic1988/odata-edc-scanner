@@ -3,3 +3,5 @@ requests
 pyodata==1.7.1
 redislite-hotqueue
 python-dateutil
+wheel
+pandas

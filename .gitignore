@@ -5,7 +5,6 @@ include/*
 lib/*
 lib64/**
 lib64
-test*/*
 pip-selfcheck.json
 pyvenv.cfg
 converter/__pycache__/*
@@ -16,3 +15,4 @@ dist/*
 build/*
 odata-edc-scanner.spec
 config.ini
+odata_edc_scanner.egg-info/*
