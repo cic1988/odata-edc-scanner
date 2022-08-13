@@ -123,6 +123,12 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
 
     """
+    for release build
+    """
+    import sys, os
+    os.environ["PATH"] += os.pathsep + os.path.join(os.getcwd())
+
+    """
     logging
     """
     logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S', level=logging.INFO)

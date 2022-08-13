@@ -14,5 +14,5 @@ taskqueue/__pycache__/*
 tmp/*
 dist/*
 build/*
-main.spec
+odata-edc-scanner.spec
 config.ini
