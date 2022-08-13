@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from multiprocessing import Pool
 from configparser import ConfigParser
 from converter.odata_converter import ODataConverter, ODataConverterFactory
+from converter.cdgc_adaptor import CDGCAdaptor
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,9 @@ def execute(args):
     converter.convert_objects(args.force)
     converter.convert_links(args.force)
     converter.zip_metadata()
+
+    adaptor = CDGCAdaptor(converter)
+    adaptor.convert_csv()
 
     if resource:
         converter.fetch_pdata(args.force)
