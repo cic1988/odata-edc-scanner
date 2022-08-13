@@ -46,7 +46,26 @@ The main branch is since 06.06.2022 set to v2 branch as v2 is the main supported
 
 
 # Usage
+
+### Import model
+1. Download the model.zip file from the latest release: https://github.com/cic1988/odata-edc-scanner/releases
+2. Import this model in EDC admin panel
+<img src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" width="300" />
+3. Create a custom resource with imported data model
+<img src="https://user-images.githubusercontent.com/7901026/148259028-eccde493-adc9-4f35-a5f7-202d9a22e891.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148259028-eccde493-adc9-4f35-a5f7-202d9a22e891.png" width="300" />
+4. Use this newly create resource to setup scanner
+
 ### Initial setup
+
+#### Option One: if running the build binary:
+1. Download the binary files from the latest release (currently CentOS/Redhat and OSX are supported): https://github.com/cic1988/odata-edc-scanner/releases
+2. Unpack the zip file in a target folder
+3. `chmod u+x odata-edc-scanner`
+4. `cp config.ini.sample config.ini`
+5. Edit the config.ini with required information (see comment in the file)
+6. Run the command `./odata-edc-scanner -f`
+
+#### Option Two: if running the python source code:
 1. Clone this repository via `git clone https://github.com/cic1988/odata-edc-scanner.git`
 2. (optional) `yum install python3-devel -y`
 3. `cd odata-edc-scanner`
@@ -57,14 +76,6 @@ The main branch is since 06.06.2022 set to v2 branch as v2 is the main supported
 8. `cp config.ini.sample config.ini`
 9. Edit the config.ini with required information (see comment in the file)
 10. `chmod u+x main.py`
-
-### Import model
-1. Download the model.zip file from the latest release: https://github.com/cic1988/odata-edc-scanner/releases
-2. Import this model in EDC admin panel
-<img src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148257997-6bade4ae-1dbf-4e95-baeb-37eaef226033.png" width="300" />
-3. Create a custom resource with imported data model
-<img src="https://user-images.githubusercontent.com/7901026/148259028-eccde493-adc9-4f35-a5f7-202d9a22e891.png" data-canonical-src="https://user-images.githubusercontent.com/7901026/148259028-eccde493-adc9-4f35-a5f7-202d9a22e891.png" width="300" />
-4. Use this newly create resource to setup scanner
 
 ### Generate the needed files manually (if you want to run scanner off-EDC):
 1. Run `./main.py -f`
