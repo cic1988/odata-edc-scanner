@@ -77,10 +77,14 @@ class ODataConverter():
             assert os.path.exists(self._dir + '/links.csv') == False, "links.csv exists in: " + str(self._dir)
             assert os.path.exists(self._dir + '/objects.csv') == False, "objects.csv exists in: " + str(self._dir)
         else:
-            import glob
-            files = glob.glob(self._dir + '/*')
-            for f in files:
-                os.remove(f)
+            import os
+            import shutil
+
+            for root, dirs, files in os.walk(self._dir):
+                for f in files:
+                    os.unlink(os.path.join(root, f))
+                for d in dirs:
+                    shutil.rmtree(os.path.join(root, d))
 
         self._objects_head = {
             'class': '',
