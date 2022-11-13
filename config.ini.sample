@@ -5,27 +5,31 @@
 ; dbfilename: the redislite db file path
 ; queuename: name task queue to process profiling task (only when profiling enabled)
 ; consumerqueuename: name consumer queue to summarize profiling task result (only when profiling enabled)
-; root_url: the ODATA REST API endpoint without query or any other parameters
-; username: the username for basic authentication. Leave it empty if not authentication required.
-; password: the password for basic authentication. Leave it empty if not authentication required.
 ; odata_version: the odata version manually given; v2 and v4 available
 ; dir: directory path to save the output files
 ; worker: number of worker to run profiling task
+; resource: name of the resource in EDC; when not given, profiling is disabled
+;
+; [<Endpoint name>]: please put in the customized name of the endpoint
+; root_url: the ODATA REST API endpoint without query or any other parameters
+; username: the username for basic authentication. Leave it empty if not authentication required.
+; password: the password for basic authentication. Leave it empty if not authentication required.
 ; profiling_lines: either positive value e.g., 1000 or all (pagination fix coded with 10000 lines)
 ; profiling_filter: profiling only specific data object. Usually used when profiling a large data object e.g., > 100,000 lines. Split multiple objects with :
-; resource: name of the resource in EDC; when not given, profiling is disabled
 ;--------------------------------------------------------------
 
 [local]
 dbfilename = ./tmp/redis.rdb
 queuename = taskqueue
 consumerqueuename = consumerqueue
+odata_version = v2
+dir = ./tmp/test
+worker = 2
+resource = ODATASAMPLE
+
+[Northwind]
 root_url = https://services.odata.org/V2/Northwind/Northwind.svc
 username =
 password =
-odata_version = v2
-dir = ./test2
-worker = 2
 profiling_lines = 1000
 profiling_filter =
-resource = ODATASAMPLE
