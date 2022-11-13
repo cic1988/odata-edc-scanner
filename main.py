@@ -23,15 +23,19 @@ class ODataConverterParameter():
         self.endpoints = {}
     
     def load_endpoints(self, config):
+    
         for endpoint in config.sections():
+            endpoint_name = ''
+
             if endpoint == 'local':
-                # backward compatible
                 if len(config.sections()) == 1:
-                    endpoint = 'Endpoint'
+                    endpoint_name = 'Endpoint'
                 else:
                     continue
+            elif endpoint != 'local':
+                endpoint_name = endpoint
 
-            self.endpoints[endpoint] = {
+            self.endpoints[endpoint_name] = {
                 'root_url': config.get(endpoint, 'root_url'),
                 'username': config.get(endpoint, 'username'),
                 'password': config.get(endpoint, 'password'),
