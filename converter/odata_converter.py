@@ -173,7 +173,7 @@ class ODataConverter():
             import csv
 
             if os.path.exists(self._dir):
-                with open(self._dir + f'/{self._resource}_DatasetMapping.csv', 'w') as f:
+                with open(self._dir + f'/{self._resource}_DatasetMapping.csv', 'a') as f:
                     logger.info(f'[... CREATETING {self._dir}/{self._resource}_DatasetMapping.csv ...]')
                     writer = csv.writer(f, delimiter=',')
                     writer.writerow(['DatasetId','AssociationType','DataTypeAttribute','DatasetFilePath'])
@@ -181,9 +181,12 @@ class ODataConverter():
                     p = Popen([file, '--asconsumer', '-f'])
                     stdout, stderr = p.communicate()
 
-    def profile(self, esname):
-        import os
-        logger.info(f'[... (WORKER {self._workerid} - PID {os.getpid()}) START PROFILING JOB: {esname}]')
+    def profile(self, obj):
+        if 'endpoint' in obj and 'esname' in obj:
+            import os
+            endpoint = obj['endpoint']
+            esname = obj['esname']
+            logger.info(f'[... (WORKER {self._workerid} - PID {os.getpid()}) START PROFILING JOB: {endpoint} - {esname}]')
     
     def create_profiling_constant_files(self, resource, force):
 

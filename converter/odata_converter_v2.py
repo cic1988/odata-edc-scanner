@@ -14,7 +14,7 @@ class ODataConverterV2(ODataConverter):
     def __init__(self, params):
         # see: https://github.com/SAP/python-pyodata/pull/149
         pyodata.v2.model.FIX_SCREWED_UP_MINIMAL_DATETIME_VALUE = True
-        ODataConverter.__init__(self, params['root_url'], params['dir'], params['resource'], params['worker'], params['worker_id'])
+        ODataConverter.__init__(self, params['endpoint'], params['dir'], params['resource'], params['worker'], params['worker_id'])
         self._session = requests.Session()
         self._session.auth = (params['username'], params['password'])
         self._client = pyodata.Client(params['root_url'], self._session)
@@ -64,9 +64,9 @@ class ODataConverterV2(ODataConverter):
 
             endpoint = copy.deepcopy(self._objects_head)
             endpoint['class'] = self._model_endpoint
-            endpoint['identity'] = 'Endpoint'
-            endpoint['core.name'] = 'Endpoint'
-            endpoint['core.description'] = 'Endpoint'
+            endpoint['identity'] = self._endpoint
+            endpoint['core.name'] = self._endpoint
+            endpoint['core.description'] = self._endpoint
             endpoint[self._model_property_datatype] = 'URL'
             endpoint[self._model_property_odataversion] = '2'
 
@@ -201,15 +201,15 @@ class ODataConverterV2(ODataConverter):
                 """ 0) endpoint to entitytype """
                 toplevel = copy.deepcopy(self._links_head)
                 toplevel['association'] = self._association_resourceparanchild
-                toplevel['toObjectIdentity'] = 'Endpoint/' + et.name
+                toplevel['toObjectIdentity'] = self._endpoint + '/' + et.name
 
                 writer.writerow(toplevel)
     
                 """ 1) com.informatica.ldm.odata.endpointentitytype """
                 endpointentitytype = copy.deepcopy(self._links_head)
                 endpointentitytype['association'] = self._association_endpointentitytype
-                endpointentitytype['fromObjectIdentity'] = 'Endpoint'
-                endpointentitytype['toObjectIdentity'] = 'Endpoint/' + et.name
+                endpointentitytype['fromObjectIdentity'] = self._endpoint
+                endpointentitytype['toObjectIdentity'] = self._endpoint + '/' + et.name
 
                 writer.writerow(endpointentitytype)
 
@@ -268,8 +268,8 @@ class ODataConverterV2(ODataConverter):
                         
                         entitytypefromto = copy.deepcopy(self._links_head)
                         entitytypefromto['association'] = self._association_datasetdataflow
-                        entitytypefromto['fromObjectIdentity'] = 'Endpoint/' + entitytype_from
-                        entitytypefromto['toObjectIdentity'] = 'Endpoint/' + entitytype_to
+                        entitytypefromto['fromObjectIdentity'] = self._endpoint + '/' + entitytype_from
+                        entitytypefromto['toObjectIdentity'] = self._endpoint + '/' + entitytype_to
 
                         writer.writerow(entitytypefromto)
 
@@ -353,15 +353,15 @@ class ODataConverterV2(ODataConverter):
                 """ 7) endpoint to function import """
                 toplevel = copy.deepcopy(self._links_head)
                 toplevel['association'] = self._association_resourceparanchild
-                toplevel['toObjectIdentity'] = 'Endpoint/' + fs.name
+                toplevel['toObjectIdentity'] = self._endpoint + '/' + fs.name
 
                 writer.writerow(toplevel)
 
                 """ 8) com.informatica.ldm.odata.endpointfunctionimport """
                 endpointfunctionimport = copy.deepcopy(self._links_head)
                 endpointfunctionimport['association'] = self._association_endpointfunctionimport
-                endpointfunctionimport['fromObjectIdentity'] = 'Endpoint'
-                endpointfunctionimport['toObjectIdentity'] = 'Endpoint/' + fs.name
+                endpointfunctionimport['fromObjectIdentity'] = self._endpoint
+                endpointfunctionimport['toObjectIdentity'] = self._endpoint + '/' + fs.name
 
                 writer.writerow(endpointfunctionimport)
 
@@ -388,13 +388,19 @@ class ODataConverterV2(ODataConverter):
             if self._profiling_filter and len(self._profiling_filter) > 0:
                 if es.name not in self._profiling_filter:
                     continue
-            profiling_q.put(es.name)
+            profiling_q.put({
+                'endpoint': self._endpoint,
+                'esname': es.name
+            })
 
         super().invoke_worker()
 
     @worker('profiling', timeout=5)
-    def profile(self, esname):
+    def profile(self, obj):
         import csv
+
+        endpoint = obj['endpoint']
+        esname = obj['esname']
 
         if esname:
             super().profile(esname)
@@ -443,7 +449,12 @@ class ODataConverterV2(ODataConverter):
                 header.append(prop.name)
                 
             if header:
-                with open(self._dir + '/' + esname + '.csv', 'w', encoding='UTF8') as f:
+                # backward compatible
+                filename = esname
+                if endpoint != 'Endpoint':
+                    filename = endpoint + '-' + filename
+
+                with open(self._dir + '/' + filename + '.csv', 'w', encoding='UTF8') as f:
                     writer = csv.writer(f)
                     writer.writerow(header)
 
@@ -461,8 +472,8 @@ class ODataConverterV2(ODataConverter):
 
             if et:
                 get_consumerqueue('profiling').put({
-                    'id': 'Endpoint/' + et,
-                    'file': self._dir + '/' + esname + '.csv'
+                    'id': endpoint + '/' + et,
+                    'file': self._dir + '/' + filename + '.csv'
                 })
     
     @consumer('profiling', timeout=5)
