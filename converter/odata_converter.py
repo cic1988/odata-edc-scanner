@@ -74,7 +74,6 @@ class ODataConverter():
         assert os.path.exists(self._dir), "given dir not found: " + str(self._dir)
 
         if not force:
-            assert os.path.exists(self._dir + '/links.csv') == False, "links.csv exists in: " + str(self._dir)
             assert os.path.exists(self._dir + '/objects.csv') == False, "objects.csv exists in: " + str(self._dir)
         else:
             import os
@@ -111,7 +110,6 @@ class ODataConverter():
 
         if not force:
             assert os.path.exists(self._dir + '/links.csv') == False, "links.csv exists in: " + str(self._dir)
-            assert os.path.exists(self._dir + '/objects.csv') == False, "objects.csv exists in: " + str(self._dir)
 
         self._links_head = {
             'association': '',
