@@ -12,12 +12,13 @@ from converter.cdgc_adaptor import CDGCAdaptor
 logger = logging.getLogger(__name__)
 
 class ODataConverterParameter():
-    def __init__(self, odata_version, dir, worker, resource):
+    def __init__(self, odata_version, dir, worker, resource, ignoreerror=False):
         self.local = {
             'odata_version': odata_version,
             'dir': dir,
             'worker': worker,
-            'resource': resource
+            'resource': resource,
+            'ignoreerror': ignoreerror
         }
 
         self.endpoints = {}
@@ -58,12 +59,14 @@ def execute(args):
     dir = cp.get('local', 'dir')
     worker = cp.get('local', 'worker', fallback=1)
     resource = cp.get('local', 'resource', fallback=None)
+    ignoreerror = cp.get('local', 'ignoreerror', fallback=False)
 
     parameter = ODataConverterParameter(
         odata_version,
         dir,
         worker,
-        resource
+        resource,
+        ignoreerror
     )
     parameter.load_endpoints(cp)
 
@@ -101,6 +104,7 @@ def execute(args):
             'password': endpoint['password'],
             'dir': dir,
             'resource': resource,
+            'ignoreerror': ignoreerror,
             'worker': worker,
             'worker_id': args.asworker_id
         })

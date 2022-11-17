@@ -3,6 +3,7 @@
 from .odata_converter import ODataConverter
 from taskqueue.taskqueue import consumer, worker, get_taskqueue, get_consumerqueue
 from pyodata.v2.model import EntityType
+from pyodata.v2.model import PolicyFatal, PolicyWarning, PolicyIgnore, ParserError, Config
 
 import requests
 import pyodata
@@ -17,7 +18,19 @@ class ODataConverterV2(ODataConverter):
         ODataConverter.__init__(self, params['endpoint'], params['dir'], params['resource'], params['worker'], params['worker_id'])
         self._session = requests.Session()
         self._session.auth = (params['username'], params['password'])
-        self._client = pyodata.Client(params['root_url'], self._session)
+
+        custom_config = None
+
+        if params['ignoreerror']:
+            custom_config = Config(
+                default_error_policy=PolicyFatal(),
+                custom_error_policies={
+                    ParserError.ANNOTATION: PolicyWarning(),
+                    ParserError.ASSOCIATION: PolicyIgnore()
+                }
+            )
+
+        self._client = pyodata.Client(params['root_url'], self._session, config=custom_config)
 
     def print_out_metadata_info(self):
 

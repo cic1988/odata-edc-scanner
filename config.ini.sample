@@ -9,6 +9,7 @@
 ; dir: directory path to save the output files
 ; worker: number of worker to run profiling task
 ; resource: name of the resource in EDC; when not given, profiling is disabled
+; ignoreerror: tolerance Non-Odata compliant error. Default is false
 ;
 ; [<Endpoint name>]: please put in the customized name of the endpoint
 ; root_url: the ODATA REST API endpoint without query or any other parameters
